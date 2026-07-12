@@ -1,0 +1,9 @@
+.register-card-layout {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+  .register-card-layout {
+    flex-direction: column;
+  }
+}
