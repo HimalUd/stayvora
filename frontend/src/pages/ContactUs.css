@@ -1,0 +1,383 @@
+.cu-page {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+}
+
+/* ===== HERO ===== */
+.cu-hero {
+  background: linear-gradient(135deg, #1E40AF 0%, #1A2B49 100%);
+  display: flex;
+  justify-content: center;
+}
+
+.cu-hero-inner {
+  width: 100%;
+  max-width: 1024px;
+  padding: 24px 16px;
+}
+
+.cu-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #DBEAFE;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  height: 48px;
+}
+
+.cu-back-link:hover {
+  color: #fff;
+}
+
+.cu-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 0;
+}
+
+.cu-hero-title {
+  font-size: 48px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.35px;
+  line-height: 48px;
+  margin: 0;
+}
+
+.cu-hero-sub {
+  max-width: 672px;
+  text-align: center;
+  color: #DBEAFE;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32.5px;
+  margin: 16px 0 0;
+}
+
+/* ===== CONTACT CARDS ===== */
+.cu-cards-section {
+  background: #F9FAFB;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  justify-content: center;
+}
+
+.cu-cards-row {
+  width: 100%;
+  max-width: 1024px;
+  padding: 48px 16px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.cu-card {
+  width: 230px;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.10), 0px 1px 3px rgba(0,0,0,0.10);
+  border-radius: 16px;
+  border: 1px solid #F3F4F6;
+  display: flex;
+  flex-direction: column;
+}
+
+.cu-card-icon {
+  width: 48px;
+  height: 48px;
+  background: #EFF6FF;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.cu-card-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #101828;
+  margin: 0;
+  line-height: 24px;
+}
+
+.cu-card-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6A7282;
+  margin: 4px 0 0;
+  line-height: 20px;
+}
+
+.cu-card-value {
+  font-size: 14px;
+  font-weight: 400;
+  color: #155DFC;
+  margin-top: 12px;
+  line-height: 20px;
+  display: block;
+}
+
+.cu-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #99A1AF;
+  line-height: 16px;
+}
+
+/* ===== FORM + FAQ SECTION ===== */
+.cu-main-section {
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.cu-main-layout {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  gap: 64px;
+}
+
+.cu-form-col {
+  width: 464px;
+  flex-shrink: 0;
+}
+
+.cu-faq-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.cu-section-title {
+  font-size: 30px;
+  font-weight: 500;
+  color: #101828;
+  letter-spacing: 0.4px;
+  line-height: 36px;
+  margin: 0;
+}
+
+.cu-section-desc {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6A7282;
+  line-height: 24px;
+  margin: 8px 0 0;
+}
+
+/* ===== FORM ===== */
+.cu-form {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cu-form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.cu-form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cu-form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #364153;
+  line-height: 20px;
+}
+
+.cu-form-group input,
+.cu-form-group select,
+.cu-form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  color: #1A2B49;
+  border: 1px solid #D1D5DC;
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cu-form-group input:focus,
+.cu-form-group select:focus,
+.cu-form-group textarea:focus {
+  border-color: #155DFC;
+  box-shadow: 0 0 0 3px rgba(21, 93, 252, 0.12);
+}
+
+.cu-form-group input::placeholder,
+.cu-form-group textarea::placeholder {
+  color: rgba(10, 10, 10, 0.50);
+}
+
+.cu-form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234B5563' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.cu-form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.cu-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: #155DFC;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.cu-submit-btn:hover {
+  background: #1D4ED8;
+}
+
+/* ===== FAQ ===== */
+.cu-faq-list {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cu-faq-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #101828;
+  line-height: 24px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.cu-faq-item:hover {
+  border-color: #155DFC;
+}
+
+.cu-faq-plus {
+  font-size: 18px;
+  font-weight: 500;
+  color: #155DFC;
+  line-height: 28px;
+  flex-shrink: 0;
+}
+
+.cu-hq-card {
+  margin-top: 40px;
+  padding: 24px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  border-radius: 16px;
+  display: flex;
+  gap: 16px;
+}
+
+.cu-hq-icon {
+  width: 40px;
+  height: 40px;
+  background: #155DFC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cu-hq-card h4 {
+  font-size: 16px;
+  font-weight: 400;
+  color: #101828;
+  margin: 0;
+  line-height: 24px;
+}
+
+.cu-hq-address {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4A5565;
+  line-height: 22.75px;
+  margin: 4px 0 0;
+}
+
+.cu-hq-hours {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6A7282;
+  line-height: 20px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .cu-cards-row {
+    flex-wrap: wrap;
+  }
+  .cu-card {
+    width: calc(50% - 12px);
+  }
+  .cu-main-layout {
+    flex-direction: column;
+  }
+  .cu-form-col,
+  .cu-faq-col {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cu-hero-title {
+    font-size: 32px;
+    line-height: 36px;
+  }
+  .cu-hero-sub {
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .cu-card {
+    width: 100%;
+  }
+  .cu-form-row {
+    flex-direction: column;
+  }
+  .cu-main-section {
+    padding: 48px 16px;
+  }
+}
