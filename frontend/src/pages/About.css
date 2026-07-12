@@ -1,0 +1,347 @@
+.ab-page {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+}
+
+/* ===== HERO ===== */
+.ab-hero {
+  background: linear-gradient(135deg, #1E40AF 0%, #1E2939 100%);
+  display: flex;
+  justify-content: center;
+}
+
+.ab-hero-inner {
+  width: 100%;
+  max-width: 1024px;
+  padding: 24px 16px;
+}
+
+.ab-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #DBEAFE;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  height: 48px;
+}
+
+.ab-back-link:hover {
+  color: #fff;
+}
+
+.ab-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 0;
+}
+
+.ab-hero-title {
+  font-size: 48px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.35px;
+  line-height: 48px;
+  margin: 0;
+}
+
+.ab-hero-sub {
+  max-width: 768px;
+  text-align: center;
+  color: #DBEAFE;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32.5px;
+  margin: 24px 0 0;
+}
+
+/* ===== STATS ===== */
+.ab-stats-section {
+  background: #EFF6FF;
+  border-bottom: 1px solid #DBEAFE;
+  display: flex;
+  justify-content: center;
+}
+
+.ab-stats-row {
+  width: 100%;
+  max-width: 1024px;
+  padding: 48px 16px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.ab-stat {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ab-stat-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.ab-stat-icon-circle {
+  width: 48px;
+  height: 48px;
+  background: #155DFC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ab-stat-value {
+  font-size: 30px;
+  font-weight: 400;
+  color: #1447E6;
+  letter-spacing: 0.4px;
+  line-height: 36px;
+  text-align: center;
+}
+
+.ab-stat-label {
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A5565;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ===== OUR STORY ===== */
+.ab-story-section {
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.ab-story-inner {
+  width: 100%;
+  max-width: 768px;
+}
+
+.ab-section-title-left {
+  font-size: 36px;
+  font-weight: 500;
+  color: #101828;
+  letter-spacing: 0.37px;
+  line-height: 40px;
+  margin: 0 0 24px;
+}
+
+.ab-story-p {
+  font-size: 18px;
+  font-weight: 400;
+  color: #4A5565;
+  line-height: 29.25px;
+  margin: 0 0 20px;
+}
+
+.ab-story-p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== WHAT WE STAND FOR ===== */
+.ab-values-section {
+  background: #F9FAFB;
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.ab-values-inner {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ab-section-title-center {
+  font-size: 36px;
+  font-weight: 500;
+  color: #101828;
+  letter-spacing: 0.37px;
+  line-height: 40px;
+  margin: 0;
+  text-align: center;
+}
+
+.ab-values-sub {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6A7282;
+  line-height: 28px;
+  text-align: center;
+  margin: 12px 0 0;
+}
+
+.ab-values-grid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 992px;
+}
+
+.ab-value-card {
+  padding: 32px;
+  background: #fff;
+  box-shadow: 0px 1px 2px -1px rgba(0,0,0,0.10), 0px 1px 3px rgba(0,0,0,0.10);
+  border-radius: 16px;
+  border: 1px solid #F3F4F6;
+}
+
+.ab-value-icon {
+  width: 48px;
+  height: 48px;
+  background: #EFF6FF;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.ab-value-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #101828;
+  line-height: 27px;
+  margin: 0;
+}
+
+.ab-value-desc {
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A5565;
+  line-height: 26px;
+  margin: 12px 0 0;
+}
+
+/* ===== MEET THE TEAM ===== */
+.ab-team-section {
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.ab-team-inner {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ab-team-sub {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6A7282;
+  line-height: 28px;
+  text-align: center;
+  margin: 12px 0 0;
+}
+
+.ab-team-grid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 992px;
+}
+
+.ab-team-card {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #F3F4F6;
+  display: flex;
+  gap: 20px;
+}
+
+.ab-team-avatar {
+  width: 64px;
+  height: 64px;
+  background: #1A2B49;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ab-team-name {
+  font-size: 16px;
+  font-weight: 400;
+  color: #101828;
+  margin: 0;
+  line-height: 24px;
+}
+
+.ab-team-role {
+  font-size: 16px;
+  font-weight: 400;
+  color: #155DFC;
+  line-height: 24px;
+  margin-top: 4px;
+}
+
+.ab-team-bio {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4A5565;
+  line-height: 22.75px;
+  margin: 12px 0 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .ab-stats-row {
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .ab-stat {
+    width: calc(50% - 16px);
+  }
+  .ab-values-grid,
+  .ab-team-grid {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ab-hero-title {
+    font-size: 32px;
+    line-height: 36px;
+  }
+  .ab-hero-sub {
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .ab-values-grid,
+  .ab-team-grid {
+    grid-template-columns: 1fr;
+  }
+  .ab-story-section {
+    padding: 48px 16px;
+  }
+  .ab-values-section {
+    padding: 48px 16px;
+  }
+  .ab-team-section {
+    padding: 48px 16px;
+  }
+}
