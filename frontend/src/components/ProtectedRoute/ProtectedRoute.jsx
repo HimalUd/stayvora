@@ -2,7 +2,16 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-export default function ProtectedRoute({ children, requiredRole }) {
+function getRoleRedirectPath(role) {
+  switch (role) {
+    case 'owner': return '/hotel-owner-dashboard';
+    case 'admin': return '/admin-dashboard';
+    case 'traveler':
+    default: return '/home';
+  }
+}
+
+export default function ProtectedRoute({ children, requiredRole, allowedRoles }) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -33,8 +42,14 @@ export default function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/" replace />;
+  const hasRole = allowedRoles
+    ? allowedRoles.includes(user.role)
+    : requiredRole
+      ? user.role === requiredRole
+      : true;
+
+  if (!hasRole) {
+    return <Navigate to={getRoleRedirectPath(user.role)} replace />;
   }
 
   return children;

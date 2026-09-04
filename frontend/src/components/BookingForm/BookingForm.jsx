@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { bookingsAPI } from '../../utils/api';
+import { formatLKRFixed } from '../../utils/currency';
 import './BookingForm.css';
 
 function getNights(checkIn, checkOut) {
@@ -93,7 +94,7 @@ export default function BookingForm({ room, hotelId, onBookingComplete }) {
       {nights > 0 && (
         <div className="booking-form-total">
           <span>Total ({nights} night{nights > 1 ? 's' : ''})</span>
-          <span className="booking-form-price">${totalPrice.toFixed(2)}</span>
+          <span className="booking-form-price">{formatLKRFixed(totalPrice)}</span>
         </div>
       )}
 

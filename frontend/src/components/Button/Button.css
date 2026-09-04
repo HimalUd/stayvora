@@ -1,0 +1,71 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  border: 1.5px solid transparent;
+}
+
+.btn-sm {
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #FFD166, #F5A624, #E8900B);
+  border: 1px solid transparent;
+  color: #0A1B33;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(245, 166, 36, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #FFD166;
+  color: #FFD166;
+}
+
+.btn-white {
+  background: linear-gradient(135deg, #FFD166, #F5A624, #E8900B);
+  border: 1px solid transparent;
+  color: #0A1B33;
+}
+
+.btn-white:hover {
+  box-shadow: 0 8px 24px rgba(245, 166, 36, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-white-outline {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.btn-white-outline:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #FFD166;
+  color: #FFD166;
+}
