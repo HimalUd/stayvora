@@ -14,11 +14,16 @@ import ContactUs from './pages/ContactUs';
 import HotelOwnerPortal from './pages/HotelOwnerPortal';
 import HotelOwnerLogin from './pages/HotelOwnerLogin';
 import HotelOwnerRegister from './pages/HotelOwnerRegister';
+import HotelRegistration from './pages/HotelRegistration';
+import EmailVerification from './pages/EmailVerification';
 import HotelOwnerDashboard from './pages/HotelOwnerDashboard';
 import HotelOwnerBookingDetail from './pages/HotelOwnerBookingDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
+import UserDashboard from './pages/Dashboard/UserDashboard';
+import MyBookingDetail from './pages/MyBookingDetail';
+import HotelOwnerReviews from './pages/HotelOwnerReviews';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function AuthLayout({ children }) {
@@ -42,20 +47,74 @@ export default function App() {
       <Route path="/hotel-owner-portal" element={<HotelOwnerPortal />} />
       <Route path="/hotel-owner-login" element={<HotelOwnerLogin />} />
       <Route path="/hotel-owner-register" element={<HotelOwnerRegister />} />
-      <Route path="/hotel-owner-dashboard" element={<HotelOwnerDashboard />} />
-      <Route path="/hotel-owner-booking/:bookingCode" element={<HotelOwnerBookingDetail />} />
+      <Route
+        path="/email-verification"
+        element={
+          <ProtectedRoute requiredRole="owner">
+            <EmailVerification />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hotel-owner-dashboard"
+        element={
+          <ProtectedRoute requiredRole="owner">
+            <HotelOwnerDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hotel-registration"
+        element={
+          <ProtectedRoute requiredRole="owner">
+            <HotelRegistration />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hotel-owner-booking/:bookingCode"
+        element={
+          <ProtectedRoute requiredRole="owner">
+            <HotelOwnerBookingDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hotel-owner-reviews"
+        element={
+          <ProtectedRoute requiredRole="owner">
+            <HotelOwnerReviews />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin-dashboard"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/home"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="traveler">
             <AuthLayout><Home /></AuthLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hotels"
+        element={
+          <ProtectedRoute requiredRole="traveler">
+            <AuthLayout><SearchResults /></AuthLayout>
           </ProtectedRoute>
         }
       />
       <Route
         path="/search"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="traveler">
             <AuthLayout><SearchResults /></AuthLayout>
           </ProtectedRoute>
         }
@@ -63,7 +122,7 @@ export default function App() {
       <Route
         path="/hotel/:id"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="traveler">
             <AuthLayout><HotelDetail /></AuthLayout>
           </ProtectedRoute>
         }
@@ -71,7 +130,7 @@ export default function App() {
       <Route
         path="/booking/:hotelId"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="traveler">
             <AuthLayout><Booking /></AuthLayout>
           </ProtectedRoute>
         }
@@ -79,13 +138,27 @@ export default function App() {
       <Route
         path="/confirmation"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="traveler">
             <AuthLayout><Confirmation /></AuthLayout>
           </ProtectedRoute>
         }
       />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
-      <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+      <Route
+        path="/my-bookings"
+        element={
+          <ProtectedRoute requiredRole="traveler">
+            <AuthLayout><UserDashboard /></AuthLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-booking/:bookingCode"
+        element={
+          <ProtectedRoute requiredRole="traveler">
+            <AuthLayout><MyBookingDetail /></AuthLayout>
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
