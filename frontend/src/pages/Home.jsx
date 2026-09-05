@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { bookingsAPI, hotelsAPI } from '../utils/api';
+import { bookingsAPI, hotelsAPI, UPLOAD_HOST } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { useHotels } from '../hooks/useHotels';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,8 +10,6 @@ import { AMENITIES } from '../lib/amenities';
 import { TRAVEL_PURPOSES } from '../lib/travelPurposes';
 import { formatLKRFixed } from '../utils/currency';
 import './Home.css';
-
-const UPLOAD_HOST = `http://${window.location.hostname || 'localhost'}:8090`;
 
 const ratings = [1, 2, 3, 4, 5];
 

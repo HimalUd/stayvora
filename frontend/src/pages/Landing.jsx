@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { hotelsAPI } from '../utils/api';
+import { hotelsAPI, UPLOAD_HOST } from '../utils/api';
 import logoLight from '../assets/logos/logo-light.png';
 import logoDark from '../assets/logos/logo-dark.png';
 import './Landing.css';
-
-const UPLOAD_HOST = `http://${window.location.hostname || 'localhost'}:8090`;
 
 const features = [
   {

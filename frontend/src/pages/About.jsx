@@ -4,10 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar/Navbar';
 import logoLight from '../assets/logos/logo-light.png';
 import logoDark from '../assets/logos/logo-dark.png';
+import { UPLOAD_HOST } from '../utils/api';
 import './Landing.css';
 import './About.css';
-
-const UPLOAD_HOST = `http://${window.location.hostname || 'localhost'}:8090`;
 
 const stats = [
   { value: '100+', label: 'Curated Hotels' },

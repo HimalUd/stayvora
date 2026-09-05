@@ -64,18 +64,35 @@ stayvora/
 - [MySQL](https://www.mysql.com/) (or XAMPP / MAMP)
 - [Node.js](https://nodejs.org/) >= 14 and npm
 
-### Quick start (recommended)
-```bash
-./start.sh
-```
-This creates the `stayvora` database (if missing), starts the backend on port 8090 (with the `index.php` router) and the frontend on port 3000.
+### Quick start (recommended — XAMPP/Apache, like Findora)
 
-> 💡 **One command after cloning:** inside the frontend folder, `npm start` (or `npm run dev`) automatically ensures the database exists, installs dependencies on first run, and starts the backend for you — so a fresh clone works with just:
-> ```bash
-> cd frontend
-> npm start
-> ```
+The StayVora backend is a PHP app served by **Apache (XAMPP/WAMP/LAMP) on port 80**, and the frontend is a React app that proxies API calls to it — the same layout as the Findora project.
+
+```bash
+# 1. Copy the backend into Apache's web root
+cp -r backend /your/xampp/htdocs/stayvora-backend
+
+# 2. Start MySQL and Apache (e.g. "Start All" in XAMPP), then create the DB once:
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS stayvora"
+mysql -u root stayvora < backend/schema.sql
+
+# 3. Run the frontend (it proxies /stayvora-backend → http://localhost:80)
+cd frontend
+npm install
+npm run dev
+```
+
+> 💡 **One command after setup:** inside the `frontend` folder, `npm run dev` starts the Vite dev server on port 3000. It forwards every `/stayvora-backend/*` request to Apache on port 80 (same-origin, so the session cookie works). Open **http://localhost:3000**.
+>
 > Seed login: **admin@stayvora.com / password** (only on a freshly imported database).
+
+### Environment variables
+Copy `frontend/.env.example` to `frontend/.env` if you need to point the frontend at a different API:
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_BASE_URL` | URL prefix where the backend is served. Default `/stayvora-backend` — must match the folder name you used inside Apache's web root (e.g. `htdocs/stayvora-backend`) |
+| `VITE_BACKEND_URL` | (dev only) Backend proxy target in `vite.config.js`. Defaults to `http://localhost:80` |
 
 ### Manual setup
 
@@ -86,22 +103,20 @@ mysql -u root stayvora < backend/schema.sql
 ```
 > Default DB config lives in `backend/config/database.php` (host: `localhost`, db: `stayvora`, user: `root`, no password). Make sure MySQL is running first, and adjust `database.php` if your credentials differ.
 
-### 2. Run the backend (port 8090)
+### 2. Run the backend (Apache on port 80)
 ```bash
-cd backend
-php -S localhost:8090 index.php
+# Copy the backend folder into Apache's web root
+cp -r backend /your/xampp/htdocs/stayvora-backend
 ```
-The API will now be available at `http://localhost:8090/api`. All routes are defined in `index.php` (front-controller pattern).
+> Start Apache in XAMPP. The bundled `backend/.htaccess` routes every `/api/*` and `/uploads/*` request to `index.php` (front-controller pattern). The API is served at `http://localhost/stayvora-backend/api`.
 
-> ⚠️ **Important:** `index.php` must be passed as the router script. Running plain `php -S localhost:8090` will serve 404s for every `/api/*` and `/uploads/*` request — the frontend then shows "Network Error" on login/register and broken images.
-
-> If the frontend runs on a different host/port than expected, set `REACT_APP_API_URL` before starting the frontend.
+> ⚠️ If you rename the folder (e.g. `htdocs/Backend`), update `VITE_API_BASE_URL` in `frontend/.env` to match — `index.php` automatically detects its own folder so routes always resolve.
 
 ### 3. Run the frontend (port 3000)
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 Then open **http://localhost:3000** in your browser.

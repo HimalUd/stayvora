@@ -6,13 +6,20 @@ require_once __DIR__ . '/config/session.php';
 require_once __DIR__ . '/app/autoload.php';
 
 $requestUri = $_SERVER['REQUEST_URI'];
-$basePath = '/Backend';
 $path = parse_url($requestUri, PHP_URL_PATH);
 
-if (strpos($path, $basePath) === 0) {
-    $path = substr($path, strlen($basePath));
+// Compute the deployment base path so routes still match no matter which
+// folder the backend lives in (e.g. /stayvora-backend or /Backend under Apache),
+// or at the root when served directly (single route via index.php as router).
+// Only strip a folder prefix when SCRIPT_NAME actually points at the router file,
+// because under the PHP built-in server SCRIPT_NAME holds the requested path.
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+if (basename($scriptName) === 'index.php') {
+    $scriptDir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+    if ($scriptDir !== '' && strpos($path, $scriptDir) === 0) {
+        $path = substr($path, strlen($scriptDir));
+    }
 }
-
 $path = ltrim($path, '/');
 $path = rtrim($path, '/');
 

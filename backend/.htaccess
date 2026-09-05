@@ -1,0 +1,11 @@
+# StayVora backend front-controller (Apache/XAMPP)
+# Place this "backend" folder inside Apache's web root (e.g. htdocs/stayvora-backend)
+# and routes will resolve to index.php.
+RewriteEngine On
+
+# Don't rewrite real files (uploads, assets, images)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else to the front controller
+RewriteRule ^ index.php [QSA,L]
