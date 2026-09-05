@@ -61,6 +61,11 @@
   gap: 14px;
 }
 
+.hop-nav-logo {
+  height: 38px;
+  width: auto;
+}
+
 .hop-nav-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.35rem;
