@@ -6,8 +6,8 @@
 set -e
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BACKEND="$ROOT/Hotel-Availability-System-Backend"
-FRONTEND="$ROOT/Hotel-Availability-System--Frontend"
+BACKEND="$ROOT/backend"
+FRONTEND="$ROOT/frontend"
 HOST=localhost
 PORT=8090
 
@@ -18,7 +18,7 @@ if ! command -v mysql >/dev/null 2>&1; then
 fi
 
 # --- 1. Frontend dependencies -------------------------------------------------
-if [ ! -d "$FRONTEND/node_modules" ]; then
+if [ ! -x "$FRONTEND/node_modules/.bin/react-scripts" ]; then
   echo "[stayvora] Installing frontend dependencies (first run)..."
   (cd "$FRONTEND" && npm install)
 fi
@@ -26,8 +26,8 @@ fi
 # --- 2. Database ---------------------------------------------------------------
 if ! mysql -u root -e "SELECT 1" >/dev/null 2>&1; then
   echo "[stayvora] Could not connect to MySQL as root with no password."
-  echo "[stayvora] Adjust Hotel-Availability-System-Backend/config/database.php to match your credentials,"
-  echo "[stayvora] or set one up manually:  mysql -u root < Hotel-Availability-System-Backend/schema.sql"
+  echo "[stayvora] Adjust backend/config/database.php to match your credentials,"
+  echo "[stayvora] or set one up manually:  mysql -u root < backend/schema.sql"
   exit 1
 fi
 

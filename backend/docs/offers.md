@@ -1,6 +1,6 @@
 # Special Offers API
 
-**Base URL:** `http://localhost/Backend/api/offers`
+**Base URL:** `http://localhost:8090/api/offers`
 
 ---
 

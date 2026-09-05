@@ -1,6 +1,6 @@
 # Nearby Places API
 
-**Base URL:** `http://localhost/Backend/api/places`
+**Base URL:** `http://localhost:8090/api/places`
 
 ---
 

@@ -1,6 +1,6 @@
 # Events API
 
-**Base URL:** `http://localhost/Backend/api/events`
+**Base URL:** `http://localhost:8090/api/events`
 
 ---
 

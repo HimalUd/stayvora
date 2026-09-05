@@ -6,7 +6,7 @@
 set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-FRONTEND="$ROOT/Hotel-Availability-System--Frontend"
+FRONTEND="$ROOT/frontend"
 
 bash "$ROOT/scripts/bootstrap-backend.sh"
 

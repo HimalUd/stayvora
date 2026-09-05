@@ -1,6 +1,6 @@
 # Rooms API
 
-**Base URL:** `http://localhost/Backend/api/rooms`
+**Base URL:** `http://localhost:8090/api/rooms`
 
 ---
 

@@ -1,6 +1,6 @@
 # Bookings API
 
-**Base URL:** `http://localhost/Backend/api/bookings`
+**Base URL:** `http://localhost:8090/api/bookings`
 
 ---
 

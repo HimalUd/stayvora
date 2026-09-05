@@ -2,7 +2,7 @@
 
 REST API for the StayVora hotel booking platform.
 
-**Base URL:** `http://localhost/Backend/api`
+**Base URL:** `http://localhost:8090/api`
 
 **Format:** JSON (requests use `Content-Type: application/json` unless noted)
 

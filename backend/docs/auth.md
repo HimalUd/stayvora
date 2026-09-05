@@ -1,6 +1,6 @@
 # Auth API
 
-**Base URL:** `http://localhost/Backend/api/auth`
+**Base URL:** `http://localhost:8090/api/auth`
 
 ---
 

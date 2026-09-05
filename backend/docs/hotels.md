@@ -1,6 +1,6 @@
 # Hotels API
 
-**Base URL:** `http://localhost/Backend/api/hotels`
+**Base URL:** `http://localhost:8090/api/hotels`
 
 ---
 

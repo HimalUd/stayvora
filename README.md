@@ -37,14 +37,14 @@ StayVora is a full-stack **hotel booking platform** where travelers can discover
 ## 📁 Project Structure
 
 ```
-stayvora-recreated/
-├── Hotel-Availability-System--Frontend/   # React client
+stayvora/
+├── frontend/                  # React client
 │   └── src/
 │       ├── pages/        # Landing, Home, SearchResults, HotelDetail,
 │       │                 # Booking, Confirmation, dashboards, auth pages...
 │       ├── components/   # Navbar, HotelCard, CalendarPicker, FilterPanel...
 │       └── utils/        # Axios API client
-└── Hotel-Availability-System-Backend/     # PHP REST API
+└── backend/     # PHP REST API
     ├── api/              # Endpoint entry scripts (auth, hotels, rooms, ...)
     ├── app/
     │   ├── Controllers/  # Auth, Hotel, Room, Booking, Admin, ... controllers
@@ -72,7 +72,7 @@ This creates the `stayvora` database (if missing), starts the backend on port 80
 
 > 💡 **One command after cloning:** inside the frontend folder, `npm start` (or `npm run dev`) automatically ensures the database exists, installs dependencies on first run, and starts the backend for you — so a fresh clone works with just:
 > ```bash
-> cd Hotel-Availability-System--Frontend
+> cd frontend
 > npm start
 > ```
 > Seed login: **admin@stayvora.com / password** (only on a freshly imported database).
@@ -82,13 +82,13 @@ This creates the `stayvora` database (if missing), starts the backend on port 80
 #### 1. Set up the database
 ```bash
 mysql -u root -e "CREATE DATABASE stayvora"
-mysql -u root stayvora < Hotel-Availability-System-Backend/schema.sql
+mysql -u root stayvora < backend/schema.sql
 ```
-> Default DB config lives in `Hotel-Availability-System-Backend/config/database.php` (host: `localhost`, db: `stayvora`, user: `root`, no password). Make sure MySQL is running first, and adjust `database.php` if your credentials differ.
+> Default DB config lives in `backend/config/database.php` (host: `localhost`, db: `stayvora`, user: `root`, no password). Make sure MySQL is running first, and adjust `database.php` if your credentials differ.
 
 ### 2. Run the backend (port 8090)
 ```bash
-cd Hotel-Availability-System-Backend
+cd backend
 php -S localhost:8090 index.php
 ```
 The API will now be available at `http://localhost:8090/api`. All routes are defined in `index.php` (front-controller pattern).
@@ -99,7 +99,7 @@ The API will now be available at `http://localhost:8090/api`. All routes are def
 
 ### 3. Run the frontend (port 3000)
 ```bash
-cd Hotel-Availability-System--Frontend
+cd frontend
 npm install
 npm start
 ```
@@ -108,18 +108,18 @@ Then open **http://localhost:3000** in your browser.
 
 ## 🔌 API Documentation
 
-Full REST API reference (all endpoints, parameters, roles, and error codes) is available in [`Hotel-Availability-System-Backend/docs/README.md`](Hotel-Availability-System-Backend/docs/README.md), with per-module docs for:
+Full REST API reference (all endpoints, parameters, roles, and error codes) is available in [`backend/docs/README.md`](backend/docs/README.md), with per-module docs for:
 
-- [Auth](Hotel-Availability-System-Backend/docs/auth.md)
-- [Hotels](Hotel-Availability-System-Backend/docs/hotels.md)
-- [Rooms](Hotel-Availability-System-Backend/docs/rooms.md)
-- [Bookings](Hotel-Availability-System-Backend/docs/bookings.md)
-- [Events](Hotel-Availability-System-Backend/docs/events.md) · [Offers](Hotel-Availability-System-Backend/docs/offers.md) · [Places](Hotel-Availability-System-Backend/docs/places.md)
-- [Admin](Hotel-Availability-System-Backend/docs/admin.md)
+- [Auth](backend/docs/auth.md)
+- [Hotels](backend/docs/hotels.md)
+- [Rooms](backend/docs/rooms.md)
+- [Bookings](backend/docs/bookings.md)
+- [Events](backend/docs/events.md) · [Offers](backend/docs/offers.md) · [Places](backend/docs/places.md)
+- [Admin](backend/docs/admin.md)
 
 ## 🗄 Database Schema
 
-The main entities (see [`schema.sql`](Hotel-Availability-System-Backend/schema.sql)):
+The main entities (see [`schema.sql`](backend/schema.sql)):
 
 `users` · `hotels` · `rooms` · `hotel_images` · `bookings` · `reviews` · `events` · `special_offers` · `nearby_places` · `notifications`
 

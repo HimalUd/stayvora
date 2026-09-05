@@ -1,6 +1,6 @@
 # Admin API
 
-**Base URL:** `http://localhost/Backend/api/admin`
+**Base URL:** `http://localhost:8090/api/admin`
 
 ---
 
