@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar/Navbar';
 import logoLight from '../assets/logos/logo-light.png';
 import logoDark from '../assets/logos/logo-dark.png';
-import { UPLOAD_HOST } from '../utils/api';
 import './Landing.css';
 import './About.css';
 
@@ -165,7 +164,7 @@ export default function About() {
       <section className="ab-hero">
         <div
           className="ab-hero-bg"
-          style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/landing-page-image.jpg)` }}
+          style={{ backgroundImage: `url(/uploads/landing-page-image.jpg)` }}
         />
         <div className="landing-hero-overlay" />
         <div className="ab-hero-content">
@@ -253,7 +252,7 @@ export default function About() {
           <Reveal delay={150} className="landing-experience-media-wrap">
             <div className="landing-experience-media">
               <img
-                src={`${UPLOAD_HOST}/uploads/sigiriya.jpg`}
+                src={`/uploads/sigiriya.jpg`}
                 alt="StayVora story"
                 className="landing-experience-img"
               />
@@ -334,7 +333,7 @@ export default function About() {
       <section className="landing-cta">
         <div
           className="landing-cta-bg"
-          style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/mirissa.jpg)` }}
+          style={{ backgroundImage: `url(/uploads/mirissa.jpg)` }}
         />
         <div className="landing-cta-overlay" />
         <Reveal className="landing-cta-content">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { bookingsAPI, hotelsAPI, UPLOAD_HOST } from '../utils/api';
+import { bookingsAPI, hotelsAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { useHotels } from '../hooks/useHotels';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,10 +14,10 @@ import './Home.css';
 const ratings = [1, 2, 3, 4, 5];
 
 const DESTINATION_META = [
-  { name: 'Mirissa', image: `${UPLOAD_HOST}/uploads/mirissa.jpg` },
-  { name: 'Colombo', image: `${UPLOAD_HOST}/uploads/colombo.jpg` },
-  { name: 'Ella', image: `${UPLOAD_HOST}/uploads/ella.jpeg` },
-  { name: 'Galle', image: `${UPLOAD_HOST}/uploads/galle.jpg` },
+  { name: 'Mirissa', image: '/uploads/mirissa.jpg' },
+  { name: 'Colombo', image: '/uploads/colombo.jpg' },
+  { name: 'Ella', image: '/uploads/ella.jpeg' },
+  { name: 'Galle', image: '/uploads/galle.jpg' },
 ];
 
 const testimonials = [
@@ -289,7 +289,7 @@ export default function Home() {
     price: h.min_room_price || 0,
     rating: h.rating || 0,
     reviews: h.total_reviews || 0,
-    image: h.image || '',
+    image: h.image || (h.images && h.images.length > 0 ? (typeof h.images[0] === 'string' ? h.images[0] : h.images[0].image_url) : ''),
     tags: h.amenities ? h.amenities.split(',').map(t => t.trim()).filter(Boolean).slice(0, 3) : [],
   }));
 
@@ -359,7 +359,7 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="home-hero">
-        <div className="home-hero-bg" style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/landing-page-image.jpg)` }} />
+        <div className="home-hero-bg" style={{ backgroundImage: `url(/uploads/landing-page-image.jpg)` }} />
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
           

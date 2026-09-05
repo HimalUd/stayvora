@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { hotelsAPI, UPLOAD_HOST } from '../utils/api';
+import { hotelsAPI } from '../utils/api';
 import logoLight from '../assets/logos/logo-light.png';
 import logoDark from '../assets/logos/logo-dark.png';
 import './Landing.css';
@@ -51,27 +51,27 @@ const features = [
 const DESTINATION_META = [
   {
     name: 'Sigiriya',
-    image: `${UPLOAD_HOST}/uploads/sigiriya.jpg`,
+    image: '/uploads/sigiriya.jpg',
     large: true
   },
   {
     name: 'Galle',
-    image: `${UPLOAD_HOST}/uploads/galle.jpg`,
+    image: '/uploads/galle.jpg',
     large: false
   },
   {
     name: 'Ella',
-    image: `${UPLOAD_HOST}/uploads/ella.jpeg`,
+    image: '/uploads/ella.jpeg',
     large: false
   },
   {
     name: 'Colombo',
-    image: `${UPLOAD_HOST}/uploads/colombo.jpg`,
+    image: '/uploads/colombo.jpg',
     large: false
   },
   {
     name: 'Mirissa',
-    image: `${UPLOAD_HOST}/uploads/mirissa.jpg`,
+    image: '/uploads/mirissa.jpg',
     large: false
   }
 ];
@@ -292,7 +292,7 @@ export default function Landing() {
       <section className="landing-hero">
         <div
           className="landing-hero-bg"
-          style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/landing-page-image.jpg)` }}
+          style={{ backgroundImage: `url(/uploads/landing-page-image.jpg)` }}
         />
         <div className="landing-hero-overlay" />
         <div className="landing-hero-orb landing-hero-orb-one" />

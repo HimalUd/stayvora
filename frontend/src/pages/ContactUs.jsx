@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar/Navbar';
 import logoLight from '../assets/logos/logo-light.png';
 import logoDark from '../assets/logos/logo-dark.png';
-import { UPLOAD_HOST } from '../utils/api';
 import './Landing.css';
 import './ContactUs.css';
 
@@ -179,7 +178,7 @@ export default function ContactUs() {
       <section className="cu-hero">
         <div
           className="cu-hero-bg"
-          style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/landing-page-image.jpg)` }}
+          style={{ backgroundImage: `url(/uploads/landing-page-image.jpg)` }}
         />
         <div className="landing-hero-overlay" />
         <div className="cu-hero-content">

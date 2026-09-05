@@ -18,10 +18,14 @@ function StarRating({ rating }) {
 
 export default function HotelCard({ hotel }) {
   const navigate = useNavigate();
-  const { id, name, location, price_range, rating, description, images } = hotel;
+  const { id, name, location, price_range, rating, description, image, images } = hotel;
 
-  const imageUrl = images && images.length > 0
-    ? images[0]
+  const firstImage = images && images.length > 0
+    ? (typeof images[0] === 'string' ? images[0] : images[0].image_url)
+    : image;
+
+  const imageUrl = firstImage
+    ? firstImage
     : 'https://via.placeholder.com/400x250?text=No+Image';
 
   return (

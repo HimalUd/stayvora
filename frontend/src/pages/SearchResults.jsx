@@ -69,7 +69,7 @@ export default function SearchResults() {
     price: h.min_room_price || 0,
     rating: h.rating || 0,
     reviews: h.total_reviews || 0,
-    image: h.image || '',
+    image: h.image || (h.images && h.images.length > 0 ? (typeof h.images[0] === 'string' ? h.images[0] : h.images[0].image_url) : ''),
     tags: h.amenities ? h.amenities.split(',').map(t => t.trim()).filter(Boolean).slice(0, 3) : [],
   }));
 
