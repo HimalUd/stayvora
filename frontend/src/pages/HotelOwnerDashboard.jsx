@@ -8,7 +8,7 @@ import { useOwnerBookings } from '../hooks/useBookings';
 import { useOwnerHotels, useAddHotelImage, useDeleteHotelImage, useUpdateHotel } from '../hooks/useHotels';
 import { useEvents, useCreateEvent, useDeleteEvent } from '../hooks/useEvents';
 import { usePlaces, useCreatePlace, useDeletePlace } from '../hooks/usePlaces';
-import { useRooms, useCreateRoom, useDeleteRoom } from '../hooks/useRooms';
+import { useRooms, useCreateRoom, useDeleteRoom, useUpdateRoom } from '../hooks/useRooms';
 import { useAddAmenity, useDeleteAmenity } from '../hooks/useAmenities';
 import { formatLKRFixed } from '../utils/currency';
 import {
@@ -107,6 +107,8 @@ export default function HotelOwnerDashboard() {
   const deletePlace = useDeletePlace();
   const createRoom = useCreateRoom();
   const deleteRoom = useDeleteRoom();
+  const updateRoom = useUpdateRoom();
+  const [editingRoom, setEditingRoom] = useState(null);
   const addAmenity = useAddAmenity();
   const deleteAmenity = useDeleteAmenity();
 
@@ -267,7 +269,33 @@ export default function HotelOwnerDashboard() {
   };
 
   const onRoomSubmit = async (data) => {
-    await createRoom.mutateAsync({ ...data, hotel_id: selectedHotelId, price: Number(data.price), capacity: Number(data.capacity) });
+    const payload = {
+      room_type: data.room_type,
+      price: Number(data.price),
+      capacity: Number(data.capacity),
+      description: data.description || '',
+    };
+    if (editingRoom) {
+      await updateRoom.mutateAsync({ ...payload, id: editingRoom.id });
+      setEditingRoom(null);
+    } else {
+      await createRoom.mutateAsync({ ...payload, hotel_id: selectedHotelId });
+    }
+    resetRoom();
+  };
+
+  const startEditRoom = (room) => {
+    setEditingRoom(room);
+    resetRoom({
+      room_type: room.room_type || '',
+      price: room.price != null ? String(room.price) : '',
+      capacity: room.capacity != null ? String(room.capacity) : '',
+      description: room.description || '',
+    });
+  };
+
+  const cancelEditRoom = () => {
+    setEditingRoom(null);
     resetRoom();
   };
 
@@ -560,7 +588,7 @@ export default function HotelOwnerDashboard() {
       <div className="hod-mgmt-form">
         <h3 className="hod-mgmt-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7V21H21V7" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7" stroke="#2563EB" strokeWidth="2"/><path d="M12 5V3" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/><rect x="7" y="10" width="4" height="4" rx="1" stroke="#2563EB" strokeWidth="2"/><rect x="13" y="10" width="4" height="4" rx="1" stroke="#2563EB" strokeWidth="2"/></svg>
-          Add Room
+          {editingRoom ? 'Edit Room' : 'Add Room'}
         </h3>
         <form onSubmit={handleRoomSubmit(onRoomSubmit)}>
           <div className="hod-mgmt-form-grid">
@@ -580,9 +608,16 @@ export default function HotelOwnerDashboard() {
               <input className="hod-input" placeholder="Room description (optional)" {...regRoom('description')} />
             </div>
           </div>
-          <button className="hod-mgmt-btn" type="submit" disabled={createRoom.isPending}>
-            {createRoom.isPending ? 'Adding...' : 'Add Room'}
-          </button>
+          <div className="hod-mgmt-actions">
+            <button className="hod-mgmt-btn" type="submit" disabled={createRoom.isPending || updateRoom.isPending}>
+              {editingRoom
+                ? (updateRoom.isPending ? 'Saving...' : 'Save Changes')
+                : (createRoom.isPending ? 'Adding...' : 'Add Room')}
+            </button>
+            {editingRoom && (
+              <button className="hod-mgmt-btn hod-mgmt-btn-cancel" type="button" onClick={cancelEditRoom}>Cancel</button>
+            )}
+          </div>
         </form>
       </div>
       <div className="hod-mgmt-list">
@@ -600,10 +635,16 @@ export default function HotelOwnerDashboard() {
                 <strong>{r.room_type}</strong> — <span style={{ color: '#059669', fontWeight: 600 }}>{formatLKRFixed(r.price)}</span>/night &middot; {r.capacity} guests
                 {r.description && <p className="hod-mgmt-item-desc">{r.description}</p>}
               </div>
-              <button className="hod-mgmt-del" onClick={() => deleteRoom.mutate(r.id)} disabled={deleteRoom.isPending}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-                Delete
-              </button>
+              <div className="hod-mgmt-actions">
+                <button className="hod-mgmt-edit" onClick={() => startEditRoom(r)} disabled={updateRoom.isPending}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  Edit
+                </button>
+                <button className="hod-mgmt-del" onClick={() => deleteRoom.mutate(r.id)} disabled={deleteRoom.isPending}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}

@@ -1,5 +1,5 @@
 export const TRAVEL_PURPOSES = [
-  'Business',
+  'Business Trip',
   'Family Trip',
   'Couple Honeymoon',
   'Solo Travel',

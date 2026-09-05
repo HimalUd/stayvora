@@ -24,3 +24,11 @@ export function useDeleteRoom() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['rooms'] }),
   });
 }
+
+export function useUpdateRoom() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => roomsAPI.update(data).then(r => r.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['rooms'] }),
+  });
+}

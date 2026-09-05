@@ -963,6 +963,22 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
+.hod-mgmt-btn-cancel {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.hod-mgmt-btn-cancel:hover:not(:disabled) {
+  background: #E2E8F0;
+  box-shadow: none;
+}
+
+.hod-mgmt-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* ===== LIST ITEMS ===== */
 .hod-mgmt-list {
   display: flex;
@@ -1065,6 +1081,34 @@
 }
 
 .hod-mgmt-del:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hod-mgmt-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.hod-mgmt-edit:hover:not(:disabled) {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+}
+
+.hod-mgmt-edit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

@@ -311,12 +311,17 @@ export default function Landing() {
           </p>
           <div className="landing-hero-actions">
             {user ? (
-              <Link to="/home" className="landing-btn-gold landing-btn-hero">
-                Book Hotels
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
+              <>
+                <Link to="/hotel-owner-portal" className="landing-btn-glass landing-btn-hero">
+                  Hotel Owner Portal
+                </Link>
+                <Link to="/home" className="landing-btn-gold landing-btn-hero">
+                  Book Hotels
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </>
             ) : (
               <>
                 <Link to="/login" className="landing-btn-glass landing-btn-hero">

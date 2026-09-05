@@ -189,10 +189,45 @@ export default function Home() {
 
   const activeFilterCount = [
     ovLocation, ovCheckIn, ovCheckOut, ovMinPrice, ovMaxPrice, ovRating, ovPurpose,
-  ].filter(Boolean).length + ovEvents.length + ovAmenities.length;
+  ].filter(Boolean).length + ovEvents.length + ovAmenities.length + (ovGuests !== 2 ? 1 : 0) + (ovRooms !== 1 ? 1 : 0);
 
   const minPriceVal = ovMinPrice ? Math.min(Number(ovMinPrice), PRICE_MAX) : PRICE_MIN;
   const maxPriceVal = ovMaxPrice ? Math.max(Number(ovMaxPrice), PRICE_MIN) : PRICE_MAX;
+
+  const matchingCount = (hotels || []).reduce((acc, h) => {
+    const loc = ovLocation.trim().toLowerCase();
+    if (loc) {
+      const where = `${h.name || ''} ${h.location || ''} ${h.city || ''} ${h.address || ''}`.toLowerCase();
+      if (!where.includes(loc)) return acc;
+    }
+    const price = Number(h.min_room_price) || 0;
+    if (price > 0 && (price < minPriceVal || price > maxPriceVal)) return acc;
+    if (ovRating && (Number(h.rating) || 0) < Number(ovRating)) return acc;
+    const amenitiesArr = (h.amenities || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+    if (ovAmenities.length > 0 && !ovAmenities.every((a) => amenitiesArr.some((t) => t.includes(a.toLowerCase()) || a.toLowerCase().includes(t)))) return acc;
+    const purposesArr = (h.travel_purpose || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+    if (ovPurpose && !purposesArr.some((p) => p.includes(ovPurpose.toLowerCase()))) return acc;
+    return acc + 1;
+  }, 0);
+
+  const activeChips = [];
+  if (ovLocation.trim()) activeChips.push({ label: `Location: ${ovLocation.trim()}`, onRemove: () => setOvLocation('') });
+  if (ovCheckIn || ovCheckOut) activeChips.push({
+    label: `Dates: ${ovCheckIn ? formatDisplay(ovCheckIn) : 'flexible'} – ${ovCheckOut ? formatDisplay(ovCheckOut) : 'flexible'}`,
+    onRemove: () => { setOvCheckIn(''); setOvCheckOut(''); },
+  });
+  if (ovGuests !== 2 || ovRooms !== 1) activeChips.push({
+    label: `${ovGuests} Guest${ovGuests !== 1 ? 's' : ''} · ${ovRooms} Room${ovRooms !== 1 ? 's' : ''}`,
+    onRemove: () => { setOvGuests(2); setOvRooms(1); },
+  });
+  if (minPriceVal > PRICE_MIN || maxPriceVal < PRICE_MAX) activeChips.push({
+    label: `Price: ${formatLKRFixed(minPriceVal)} – ${maxPriceVal >= PRICE_MAX ? `${PRICE_MAX.toLocaleString('en-IN')}+` : formatLKRFixed(maxPriceVal)}`,
+    onRemove: () => { setOvMinPrice(''); setOvMaxPrice(''); },
+  });
+  if (ovRating) activeChips.push({ label: `${ovRating} Star+`, onRemove: () => setOvRating(null) });
+  if (ovPurpose) activeChips.push({ label: ovPurpose, onRemove: () => setOvPurpose(null) });
+  ovEvents.forEach((e) => activeChips.push({ label: e, onRemove: () => setOvEvents((prev) => prev.filter((x) => x !== e)) }));
+  ovAmenities.forEach((a) => activeChips.push({ label: a, onRemove: () => setOvAmenities((prev) => prev.filter((x) => x !== a)) }));
 
   const handleReset = () => {
     setOvLocation('');
@@ -675,7 +710,13 @@ export default function Home() {
             <div className="ov-header-left">
               
               <h3 className="ov-title">Additional Filters</h3>
-              <p className="ov-subtitle">Refine your stay with smart filters</p>
+              <p className="ov-subtitle">
+                {activeFilterCount === 0 && 'Refine your stay with smart filters'}
+                {activeFilterCount > 0 && matchingCount > 0 && (
+                  <><strong className="ov-live-count">{matchingCount}</strong> luxury {matchingCount === 1 ? 'stay matches' : 'stays match'} your filters</>
+                )}
+                {activeFilterCount > 0 && matchingCount === 0 && 'No stays match yet — tweak your filters'}
+              </p>
             </div>
             <div className="ov-header-actions">
               {activeFilterCount > 0 && <span className="ov-count">{activeFilterCount} active</span>}
@@ -683,7 +724,36 @@ export default function Home() {
               <button className="ov-close" onClick={closeOverlay}>✕</button>
             </div>
           </div>
+
+          {activeFilterCount > 0 && (
+            <div className="ov-active-chips">
+              {activeChips.map((chip, i) => (
+                <button key={i} type="button" className="ov-chip-tag" onClick={chip.onRemove} title="Remove filter">
+                  <span className="ov-chip-tag-label">{chip.label}</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              ))}
+              <button type="button" className="ov-chip-tag ov-chip-tag-clear" onClick={handleReset}>Clear all</button>
+            </div>
+          )}
+
           <div className="ov-body">
+            <div className="ov-card">
+              <div className="ov-card-head">
+                <span className="ov-card-icon">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M2 5L9 1.5L16 5V13L9 16.5L2 13V5Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                    <path d="M2 5L9 8.5L16 5M9 8.5V16.5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+                <span className="ov-card-title-wrap">
+                  <span className="ov-card-title">Trip Details</span>
+                  <span className="ov-card-hint">Where, when and how many</span>
+                </span>
+              </div>
+              <div className="ov-card-body">
             {/* Location */}
             <div className="ov-field-group">
               <label className="ov-label">Location</label>
@@ -798,6 +868,25 @@ export default function Home() {
               </div>
             </div>
 
+              </div>
+            </div>
+
+            <div className="ov-card">
+              <div className="ov-card-head">
+                <span className="ov-card-icon">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M2 4H16V14H2V4Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                    <path d="M2 7.5H16M6 10.5H8.5M11.5 10.5H13" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                    <path d="M7.5 4V14M10.5 4V14" stroke="currentColor" strokeWidth="1.3" strokeDasharray="1.6 2"/>
+                  </svg>
+                </span>
+                <span className="ov-card-title-wrap">
+                  <span className="ov-card-title">Stay Preferences</span>
+                  <span className="ov-card-hint">Match every detail to you</span>
+                </span>
+              </div>
+              <div className="ov-card-body">
+
             {/* Price Range */}
             <div className="ov-section">
               <div className="ov-section-header">
@@ -871,7 +960,7 @@ export default function Home() {
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="#F5A624">
                       <path d="M8 1l1.91 3.87 4.27.62-3.09 3.01.73 4.25L8 11.42l-3.82 2.01.73-4.25-3.09-3.01 4.27-.62L8 1z" />
                     </svg>
-                    {r}
+                    {r}{ovRating === r && <span className="ov-chip-plus">+</span>}
                   </button>
                 ))}
               </div>
@@ -887,6 +976,11 @@ export default function Home() {
                     className={`ov-pill ${ovPurpose === p ? 'ov-pill-active' : ''}`}
                     onClick={() => setOvPurpose(ovPurpose === p ? null : p)}
                   >
+                    {ovPurpose === p && (
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2.5 6.5L4.8 8.8L9.5 3.8" stroke="#F5A624" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
                     {p}
                   </button>
                 ))}
@@ -903,6 +997,11 @@ export default function Home() {
                     className={`ov-pill ${ovEvents.includes(t) ? 'ov-pill-active' : ''}`}
                     onClick={() => setOvEvents(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])}
                   >
+                    {ovEvents.includes(t) && (
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2.5 6.5L4.8 8.8L9.5 3.8" stroke="#F5A624" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
                     {t}
                   </button>
                 ))}
@@ -919,9 +1018,16 @@ export default function Home() {
                     className={`ov-pill ${ovAmenities.includes(a) ? 'ov-pill-active' : ''}`}
                     onClick={() => setOvAmenities(prev => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])}
                   >
+                    {ovAmenities.includes(a) && (
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2.5 6.5L4.8 8.8L9.5 3.8" stroke="#F5A624" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
                     {a}
                   </button>
                 ))}
+              </div>
+            </div>
               </div>
             </div>
           </div>
@@ -929,7 +1035,10 @@ export default function Home() {
           <div className="ov-footer">
             <button className="ov-reset-btn" onClick={handleReset}>Reset Filters</button>
             <button className="ov-search-btn" onClick={handleOverlaySearch}>
-              Search Luxury Stays
+              {matchingCount > 0 ? `See ${matchingCount} ${matchingCount === 1 ? 'Stay' : 'Stays'}` : 'Search Stays'}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="#0A1B33" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
           </div>
         </div>

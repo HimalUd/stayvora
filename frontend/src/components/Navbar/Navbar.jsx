@@ -12,6 +12,8 @@ export default function Navbar() {
   const menuRef = useRef(null);
   const { pathname } = useLocation();
 
+  const showPortalLink = true;
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -56,7 +58,7 @@ export default function Navbar() {
           >Hotels</Link>
           <NavLink to="/about" className="navbar-link">About Us</NavLink>
           <NavLink to="/contact" className="navbar-link">Contact Us</NavLink>
-          <NavLink to="/hotel-owner-portal" className="navbar-link navbar-link-purple">Hotel Owner Portal</NavLink>
+          {showPortalLink && <NavLink to="/hotel-owner-portal" className="navbar-link navbar-link-purple">Hotel Owner Portal</NavLink>}
         </div>
         <div className="navbar-right" ref={menuRef}>
           <button
@@ -121,7 +123,7 @@ export default function Navbar() {
         >Hotels</Link>
         <NavLink to="/about" className="navbar-mobile-link" onClick={() => setMobileOpen(false)}>About Us</NavLink>
         <NavLink to="/contact" className="navbar-mobile-link" onClick={() => setMobileOpen(false)}>Contact Us</NavLink>
-        <NavLink to="/hotel-owner-portal" className="navbar-mobile-link" onClick={() => setMobileOpen(false)}>Hotel Owner Portal</NavLink>
+        {showPortalLink && <NavLink to="/hotel-owner-portal" className="navbar-mobile-link" onClick={() => setMobileOpen(false)}>Hotel Owner Portal</NavLink>}
         <div className="navbar-mobile-footer">
           <Link to="/my-bookings" className="navbar-mobile-link" onClick={() => setMobileOpen(false)}>My Bookings</Link>
           <button className="navbar-mobile-link navbar-mobile-logout" onClick={() => { setMobileOpen(false); logout(); }}>Logout</button>

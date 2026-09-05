@@ -20,7 +20,6 @@ const hotelAddSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
-  country: z.string().min(1, 'Country is required'),
   priceRange: z.string().min(1, 'Select a price range'),
   travelPurposes: z.array(z.string()).min(1, 'Select at least one travel purpose'),
 });
@@ -45,7 +44,6 @@ export default function HotelRegistration() {
       description: '',
       address: '',
       city: '',
-      country: '',
       priceRange: '',
       travelPurposes: [],
     },
@@ -53,7 +51,6 @@ export default function HotelRegistration() {
 
   const previewName = watch('hotelName');
   const previewCity = watch('city');
-  const previewCountry = watch('country');
   const previewDescription = watch('description');
 
   const togglePurpose = (p) => {
@@ -79,7 +76,6 @@ export default function HotelRegistration() {
       const data = res.data;
       if (data.display_name) setValue('address', data.display_name, { shouldValidate: true });
       if (data.city) setValue('city', data.city, { shouldValidate: true });
-      if (data.country) setValue('country', data.country, { shouldValidate: true });
       setMapSuccess('Address details fetched from the link! Review and adjust if needed.');
     } catch (err) {
       setMapError(err.response?.data?.message || 'Could not read that link. Paste a Google Maps share link.');
@@ -98,7 +94,6 @@ export default function HotelRegistration() {
         location: data.city,
         address: data.address,
         city: data.city,
-        country: data.country,
         price_range: data.priceRange,
         rating,
         travel_purpose: travelPurposes.join(', '),
@@ -227,7 +222,7 @@ export default function HotelRegistration() {
                   </svg>
                   <input
                     className="hreg-input hreg-map-input"
-                    placeholder="Paste Google Maps share link (auto-fills address, city, country)"
+                    placeholder="Paste Google Maps share link (auto-fills address, city)"
                     value={mapUrl}
                     onChange={e => setMapUrl(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleExtractMap(); } }}
@@ -253,30 +248,16 @@ export default function HotelRegistration() {
                 {mapError && <span className="hreg-error">{mapError}</span>}
               </div>
 
-              <div className="hreg-row">
-                <div className="hreg-field">
-                  <label className="hreg-label">City *</label>
-                  <div className="hreg-input-wrap">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="6" r="3.33" stroke="#90A1B9" strokeWidth="1.33"/>
-                      <path d="M8 14.5C8 14.5 13 10.5 13 6C13 3.2 10.8 1 8 1C5.2 1 3 3.2 3 6C3 10.5 8 14.5 8 14.5Z" stroke="#90A1B9" strokeWidth="1.33"/>
-                    </svg>
-                    <input className="hreg-input" placeholder="e.g. Mirissa" {...register('city')} />
-                  </div>
-                  {errors.city && <span className="hreg-error">{errors.city.message}</span>}
+              <div className="hreg-field">
+                <label className="hreg-label">City *</label>
+                <div className="hreg-input-wrap">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="6" r="3.33" stroke="#90A1B9" strokeWidth="1.33"/>
+                    <path d="M8 14.5C8 14.5 13 10.5 13 6C13 3.2 10.8 1 8 1C5.2 1 3 3.2 3 6C3 10.5 8 14.5 8 14.5Z" stroke="#90A1B9" strokeWidth="1.33"/>
+                  </svg>
+                  <input className="hreg-input" placeholder="e.g. Mirissa" {...register('city')} />
                 </div>
-                <div className="hreg-field">
-                  <label className="hreg-label">Country *</label>
-                  <div className="hreg-input-wrap">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="6.33" stroke="#90A1B9" strokeWidth="1.33"/>
-                      <path d="M2 8H14" stroke="#90A1B9" strokeWidth="1.33"/>
-                      <path d="M8 1.67C9.5 3.6 10.33 5.7 10.33 8C10.33 10.3 9.5 12.4 8 14.33C6.5 12.4 5.67 10.3 5.67 8C5.67 5.7 6.5 3.6 8 1.67Z" stroke="#90A1B9" strokeWidth="1.33"/>
-                    </svg>
-                    <input className="hreg-input" placeholder="e.g. Sri Lanka" {...register('country')} />
-                  </div>
-                  {errors.country && <span className="hreg-error">{errors.country.message}</span>}
-                </div>
+                {errors.city && <span className="hreg-error">{errors.city.message}</span>}
               </div>
 
               <div className="hreg-field">
@@ -299,7 +280,7 @@ export default function HotelRegistration() {
               </div>
 
               <div className="hreg-field">
-                <label className="hreg-label">Travel Purposes *</label>
+                <label className="hreg-label">Special offers for *</label>
                 <div className="hreg-chip-grid">
                   {TRAVEL_PURPOSES.map(p => (
                     <button
@@ -419,7 +400,7 @@ export default function HotelRegistration() {
                   <path d="M8 14.5C8 14.5 13 10.5 13 6C13 3.2 10.8 1 8 1C5.2 1 3 3.2 3 6C3 10.5 8 14.5 8 14.5Z" stroke="#93A5C3" strokeWidth="1.33"/>
                   <circle cx="8" cy="6" r="2" stroke="#93A5C3" strokeWidth="1.33"/>
                 </svg>
-                {previewCity || 'City'}{previewCountry ? `, ${previewCountry}` : ''}
+                {previewCity || 'City'}
               </div>
               <div className="hreg-preview-desc">
                 {previewDescription || 'Your hotel description will appear here as you type. Travelers use this to decide where to stay.'}
