@@ -11,7 +11,7 @@ export default defineConfig({
       // This makes API calls same-origin, so the session cookie
       // (SameSite=Lax) is sent automatically on every request.
       '/stayvora-backend': {
-        target: process.env.VITE_BACKEND_URL || 'http://localhost:80',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:8080',
         changeOrigin: true,
       },
     },

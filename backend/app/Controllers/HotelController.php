@@ -251,8 +251,8 @@ class HotelController extends Controller {
                 $this->json(["message" => "Failed to upload image"], 500);
             }
 
-            $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
-            $imageUrl = $baseUrl . '/uploads/hotels/' . $filename;
+            $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php')), '/');
+            $imageUrl = $scriptDir . '/uploads/hotels/' . $filename;
         } else {
             // Fall back to JSON URL input
             $input = $this->getJsonInput();
