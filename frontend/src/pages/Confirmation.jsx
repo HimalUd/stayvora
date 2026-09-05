@@ -1,13 +1,17 @@
 import React from 'react';
-import { useLocation, useSearchParams, Link } from 'react-router-dom';
+import { useLocation, useSearchParams, Link, Navigate } from 'react-router-dom';
 import './Confirmation.css';
 
 export default function Confirmation() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
 
-  const code = searchParams.get('code') || 'BKDQ84N0OX2';
+  const code = searchParams.get('code');
   const data = location.state || {};
+
+  if (!code || !data.hotel) {
+    return <Navigate to="/home" replace />;
+  }
 
   return (
     <div className="cf-page">
@@ -31,27 +35,27 @@ export default function Confirmation() {
           <div className="cf-details">
             <div className="cf-row">
               <span className="cf-row-label">Hotel</span>
-              <span className="cf-row-value">{data.hotel || 'Mirissa Beach Hotel'}</span>
+              <span className="cf-row-value">{data.hotel}</span>
             </div>
             <div className="cf-row">
               <span className="cf-row-label">Room Type</span>
-              <span className="cf-row-value">{data.room || 'Classic Room'}</span>
+              <span className="cf-row-value">{data.room}</span>
             </div>
             <div className="cf-row">
               <span className="cf-row-label">Check-in</span>
-              <span className="cf-row-value">{data.checkIn || 'Jul 15, 2026'}</span>
+              <span className="cf-row-value">{data.checkIn}</span>
             </div>
             <div className="cf-row">
               <span className="cf-row-label">Check-out</span>
-              <span className="cf-row-value">{data.checkOut || 'Jul 18, 2026'}</span>
+              <span className="cf-row-value">{data.checkOut}</span>
             </div>
             <div className="cf-row">
               <span className="cf-row-label">Guests</span>
-              <span className="cf-row-value">{data.guests || 2} Guest{(data.guests || 2) > 1 ? 's' : ''}</span>
+              <span className="cf-row-value">{data.guests} Guest{data.guests > 1 ? 's' : ''}</span>
             </div>
             <div className="cf-row cf-row-total">
               <span className="cf-row-label">Total Amount</span>
-              <span className="cf-row-value cf-total-value">${data.total || '390.88'}</span>
+              <span className="cf-row-value cf-total-value">${data.total}</span>
             </div>
           </div>
 

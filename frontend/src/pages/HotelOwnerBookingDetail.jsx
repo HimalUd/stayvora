@@ -1,46 +1,45 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useOwnerBookings, useConfirmBooking, useCancelBooking } from '../hooks/useBookings';
+import { formatLKRFixed } from '../utils/currency';
 import './HotelOwnerBookingDetail.css';
 
 const statusColors = {
-  confirmed: '#1976D2',
-  checked_in: '#2E7D32',
-  checked_out: 'rgba(0,0,0,0.08)',
+  pending: '#F59E0B',
+  confirmed: '#2563EB',
   cancelled: '#D32F2F',
 };
 
 const statusLabels = {
+  pending: 'PENDING',
   confirmed: 'CONFIRMED',
-  checked_in: 'CHECKED IN',
-  checked_out: 'CHECKED OUT',
   cancelled: 'CANCELLED',
 };
 
 const statusTextColors = {
+  pending: 'white',
   confirmed: 'white',
-  checked_in: 'white',
-  checked_out: 'rgba(0,0,0,0.87)',
   cancelled: 'white',
 };
-
-function updateBookingStatus(bookingCode, newStatus) {
-  const bookings = JSON.parse(localStorage.getItem('stayvora_bookings') || '[]');
-  const idx = bookings.findIndex(b => b.bookingCode === bookingCode);
-  if (idx !== -1) {
-    bookings[idx].status = newStatus;
-    localStorage.setItem('stayvora_bookings', JSON.stringify(bookings));
-  }
-}
 
 export default function HotelOwnerBookingDetail() {
   const { bookingCode } = useParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState(null);
+  const { data: bookings = [], isLoading: loading } = useOwnerBookings();
+  const confirmMutation = useConfirmBooking();
+  const cancelMutation = useCancelBooking();
 
-  const booking = useMemo(() => {
-    const bookings = JSON.parse(localStorage.getItem('stayvora_bookings') || '[]');
-    return bookings.find(b => b.bookingCode === bookingCode);
-  }, [bookingCode, status]);
+  const booking = bookings.find(b => b.booking_code === bookingCode) || null;
+
+  if (loading) {
+    return (
+      <div className="hobd-page">
+        <div className="hobd-content">
+          <div className="loading-screen"><div className="spinner spinner-lg" /></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!booking) {
     return (
@@ -48,9 +47,6 @@ export default function HotelOwnerBookingDetail() {
         <div className="hobd-content">
           <p className="hobd-empty">Booking not found</p>
           <button className="hobd-back-btn" onClick={() => navigate('/hotel-owner-dashboard')}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="3.33" y="3.33" width="4.67" height="9.33" rx="1.33" stroke="#1976D2" strokeWidth="1.33"/>
-            </svg>
             Back to Dashboard
           </button>
         </div>
@@ -58,31 +54,49 @@ export default function HotelOwnerBookingDetail() {
     );
   }
 
-  const currentStatus = booking.status || 'confirmed';
-  const guestName = `${booking.firstName || ''} ${booking.lastName || ''}`.trim() || 'Guest';
+  const currentStatus = booking.status || 'pending';
+  const guestName = booking.guest_name || booking.user_name || 'Guest';
   const initial = guestName.charAt(0).toUpperCase();
 
-  const handleStatusChange = (newStatus) => {
-    updateBookingStatus(bookingCode, newStatus);
-    setStatus(newStatus);
+  const formatDate = (d) => {
+    const date = new Date(d);
+    if (isNaN(date)) return d;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const canCheckIn = currentStatus === 'confirmed';
-  const canCheckOut = currentStatus === 'checked_in';
-  const canCancel = currentStatus !== 'checked_out' && currentStatus !== 'cancelled';
+  const nights = Math.max(Math.round((new Date(booking.check_out) - new Date(booking.check_in)) / 86400000), 1);
+  const totalPrice = Number(booking.total_price) || 0;
+  const perNight = totalPrice / nights;
+
+  const handleConfirm = async () => {
+    try {
+      await confirmMutation.mutateAsync(booking.id);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to confirm booking');
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      await cancelMutation.mutateAsync(booking.id);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to cancel booking');
+    }
+  };
+
+  const canConfirm = currentStatus === 'pending';
+  const canCancel = currentStatus !== 'cancelled';
 
   return (
     <div className="hobd-page">
       <div className="hobd-content">
-        {/* BACK */}
         <button className="hobd-back-btn" onClick={() => navigate('/hotel-owner-dashboard')}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="3.33" y="3.33" width="4.67" height="9.33" rx="1.33" stroke="#1976D2" strokeWidth="1.33"/>
+            <rect x="3.33" y="3.33" width="4.67" height="9.33" rx="1.33" stroke="#2563EB" strokeWidth="1.33"/>
           </svg>
           Back to Dashboard
         </button>
 
-        {/* HEADER CARD */}
         <div className="hobd-header-card">
           <div>
             <h1 className="hobd-header-title">Booking Details</h1>
@@ -93,15 +107,13 @@ export default function HotelOwnerBookingDetail() {
           </div>
         </div>
 
-        {/* TWO COLUMN */}
         <div className="hobd-columns">
-          {/* LEFT: CUSTOMER INFO */}
           <div className="hobd-card">
             <div className="hobd-card-heading">
               <div className="hobd-card-icon" style={{ background: '#E0E7FF' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <rect x="5" y="15" width="14" height="6" rx="1" stroke="#4F39F6" strokeWidth="2"/>
-                  <rect x="8" y="3" width="8" height="8" rx="4" stroke="#4F39F6" strokeWidth="2"/>
+                  <rect x="5" y="15" width="14" height="6" rx="1" stroke="#2563EB" strokeWidth="2"/>
+                  <rect x="8" y="3" width="8" height="8" rx="4" stroke="#2563EB" strokeWidth="2"/>
                 </svg>
               </div>
               <span className="hobd-card-title">Customer Information</span>
@@ -122,7 +134,7 @@ export default function HotelOwnerBookingDetail() {
                   <rect x="1.33" y="2.67" width="13.33" height="10.67" rx="1.33" stroke="#6A7282" strokeWidth="1.33"/>
                   <rect x="1.33" y="4.67" width="13.33" height="4" stroke="#6A7282" strokeWidth="1.33"/>
                 </svg>
-                <span>{booking.email || '-'}</span>
+                <span>{booking.guest_email || booking.user_email || '-'}</span>
               </div>
             </div>
             <hr className="hobd-divider" />
@@ -132,7 +144,7 @@ export default function HotelOwnerBookingDetail() {
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <rect x="1.41" y="1.33" width="13.26" height="13.29" rx="2" stroke="#6A7282" strokeWidth="1.33"/>
                 </svg>
-                <span>{booking.phone || '-'}</span>
+                <span>{booking.guest_phone || booking.user_phone || '-'}</span>
               </div>
             </div>
             <hr className="hobd-divider" />
@@ -150,47 +162,46 @@ export default function HotelOwnerBookingDetail() {
             </div>
           </div>
 
-          {/* RIGHT: BOOKING INFO */}
           <div className="hobd-card">
             <div className="hobd-card-heading">
               <div className="hobd-card-icon" style={{ background: '#DBEAFE' }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="4" width="18" height="18" rx="2" stroke="#155DFC" strokeWidth="2"/>
+                  <rect x="3" y="4" width="18" height="18" rx="2" stroke="#2563EB" strokeWidth="2"/>
                 </svg>
               </div>
               <span className="hobd-card-title">Booking Information</span>
             </div>
 
             <div className="hobd-info-row">
-              <span className="hobd-info-label">Room Type</span>
+              <span className="hobd-info-label">Hotel</span>
               <div className="hobd-info-line">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <rect x="2.67" y="1.33" width="10.67" height="13.33" rx="1.33" stroke="#6A7282" strokeWidth="1.33"/>
                   <rect x="6" y="4.67" width="4" height="4" rx="2" stroke="#6A7282" strokeWidth="1.33"/>
                 </svg>
-                <span>{booking.roomType || 'Standard'}</span>
+                <span>{booking.hotel_name}</span>
               </div>
             </div>
             <hr className="hobd-divider" />
             <div className="hobd-info-row">
-              <span className="hobd-info-label">Room Number</span>
-              <span className="hobd-info-value">#{(booking.roomNumber || 'N/A')}</span>
+              <span className="hobd-info-label">Room Type</span>
+              <span className="hobd-info-value">{booking.room_type}</span>
             </div>
             <hr className="hobd-divider" />
             <div className="hobd-info-row-double">
               <div>
                 <span className="hobd-info-label">Check-in</span>
-                <span className="hobd-info-value">{booking.checkIn || '-'}</span>
+                <span className="hobd-info-value">{formatDate(booking.check_in)}</span>
               </div>
               <div>
                 <span className="hobd-info-label">Check-out</span>
-                <span className="hobd-info-value">{booking.checkOut || '-'}</span>
+                <span className="hobd-info-value">{formatDate(booking.check_out)}</span>
               </div>
             </div>
-            <hr className="hobd-divider" />
-            <div className="hobd-info-row">
-              <span className="hobd-info-label">Duration</span>
-              <span className="hobd-info-value">{booking.nights || 0} Night{(booking.nights || 0) > 1 ? 's' : ''}</span>
+            <div className="hobd-stay">
+              <span className="hobd-stay-days">{nights} night{nights > 1 ? 's' : ''}</span>
+              <span className="hobd-stay-sep">·</span>
+              <span className="hobd-stay-rate">{formatLKRFixed(perNight)}/night</span>
             </div>
             <hr className="hobd-divider" />
             <div className="hobd-info-row">
@@ -199,45 +210,35 @@ export default function HotelOwnerBookingDetail() {
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <rect x="4" y="3.33" width="8" height="9.33" rx="1.33" stroke="#00A63E" strokeWidth="1.33"/>
                 </svg>
-                <span className="hobd-price">${booking.total || 0}</span>
+                <span className="hobd-price">{formatLKRFixed(booking.total_price || 0)}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* SPECIAL REQUESTS */}
         <div className="hobd-card">
           <div className="hobd-card-heading">
             <div className="hobd-card-icon" style={{ background: '#FEF3C6' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="4" y="2" width="16" height="20" rx="2" stroke="#E17100" strokeWidth="2"/>
-                <rect x="14" y="2" width="6" height="6" rx="1" stroke="#E17100" strokeWidth="2"/>
+                <rect x="4" y="2" width="16" height="20" rx="2" stroke="#F5A624" strokeWidth="2"/>
+                <rect x="14" y="2" width="6" height="6" rx="1" stroke="#F5A624" strokeWidth="2"/>
               </svg>
             </div>
             <span className="hobd-card-title">Special Requests</span>
           </div>
-          <p className="hobd-requests-text">{booking.specialRequests || 'No special requests'}</p>
+          <p className="hobd-requests-text">{booking.special_requests || 'No special requests'}</p>
         </div>
 
-        {/* ACTIONS */}
         <div className="hobd-actions">
-          {canCheckIn && (
-            <button className="hobd-btn hobd-btn-primary" onClick={() => handleStatusChange('checked_in')}>
-              Check In
-            </button>
-          )}
-          {canCheckOut && (
-            <button className="hobd-btn hobd-btn-primary" onClick={() => handleStatusChange('checked_out')}>
-              Check Out
+          {canConfirm && (
+            <button className="hobd-btn hobd-btn-primary" onClick={handleConfirm} disabled={confirmMutation.isPending}>
+              {confirmMutation.isPending ? 'Processing...' : 'Confirm Booking'}
             </button>
           )}
           {canCancel && (
-            <button className="hobd-btn hobd-btn-danger" onClick={() => handleStatusChange('cancelled')}>
-              Cancel Booking
+            <button className="hobd-btn hobd-btn-danger" onClick={handleCancel} disabled={cancelMutation.isPending}>
+              {cancelMutation.isPending ? 'Processing...' : 'Cancel Booking'}
             </button>
-          )}
-          {currentStatus === 'checked_out' && (
-            <p className="hobd-complete-msg">This booking has been completed.</p>
           )}
           {currentStatus === 'cancelled' && (
             <p className="hobd-cancelled-msg">This booking has been cancelled.</p>

@@ -7,16 +7,16 @@
   gap: 4px;
   padding: 12px 16px;
   margin: 16px 0;
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-  border-radius: 10px;
+  background: rgba(245, 166, 36, 0.08);
+  border: 1px solid rgba(245, 166, 36, 0.35);
+  border-radius: 12px;
   text-align: center;
 }
 
 .auth-demo-label {
   font-size: 11px;
   font-weight: 700;
-  color: #92400E;
+  color: #B45309;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -24,6 +24,6 @@
 .auth-demo-creds {
   font-size: 14px;
   font-weight: 500;
-  color: #78350F;
+  color: #92400E;
   font-family: 'SF Mono', 'Fira Code', monospace;
 }

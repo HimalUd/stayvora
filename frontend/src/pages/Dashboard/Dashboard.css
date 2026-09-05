@@ -75,6 +75,14 @@
   background: #F9FAFB;
 }
 
+.dashboard-row-link {
+  cursor: pointer;
+}
+
+.dashboard-row-link:hover td {
+  background: #EEF3FB !important;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;

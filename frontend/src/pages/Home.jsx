@@ -1,37 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { hotelsAPI } from '../utils/api';
+import React, { useState, useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { bookingsAPI, hotelsAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { useHotels } from '../hooks/useHotels';
 import { Link, useNavigate } from 'react-router-dom';
+import CalendarPicker, { toDateInput, formatDisplay } from '../components/CalendarPicker/CalendarPicker';
+import { EVENT_TYPES } from '../lib/eventTypes';
+import { AMENITIES } from '../lib/amenities';
+import { TRAVEL_PURPOSES } from '../lib/travelPurposes';
+import { formatLKRFixed } from '../utils/currency';
 import './Home.css';
+
+const UPLOAD_HOST = `http://${window.location.hostname || 'localhost'}:8090`;
 
 const ratings = [1, 2, 3, 4, 5];
 
-const featuredHotels = [
-  { id: 1, name: 'Puttalam Resort', location: 'Puttalam, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 2, name: 'Sigiriya Resort', location: 'Sigiriya, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 3, name: 'Jungle villa', location: 'Kandy, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1572307480816-4ae3267c8c0f?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 4, name: 'Araliya Resort', location: 'Unawatuna, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 5, name: 'Sudu araliya Resort', location: 'Bentota, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 6, name: 'Mirissa Resort', location: 'Mirissa, Sri Lanka', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-];
-
-const destinations = [
-  { name: 'Mirissa', count: '23 Hotels', image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=262&h=440&fit=crop' },
-  { name: 'Colombo', count: '156 Hotels', image: 'https://images.unsplash.com/photo-1586269648864-47a8b810f2a8?w=262&h=440&fit=crop' },
-  { name: 'Ella', count: '198 Hotels', image: 'https://images.unsplash.com/photo-1596397042349-2c0d9a9d4e9a?w=262&h=440&fit=crop' },
-  { name: 'Mirissa', count: '142 Hotels', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=262&h=440&fit=crop' },
+const DESTINATION_META = [
+  { name: 'Mirissa', image: `${UPLOAD_HOST}/uploads/mirissa.jpg` },
+  { name: 'Colombo', image: `${UPLOAD_HOST}/uploads/colombo.jpg` },
+  { name: 'Ella', image: `${UPLOAD_HOST}/uploads/ella.jpeg` },
+  { name: 'Galle', image: `${UPLOAD_HOST}/uploads/galle.jpg` },
 ];
 
 const testimonials = [
-  { name: 'Sarah Johnson', location: 'London, UK', text: 'The booking experience was seamless and the hotel recommendations were perfect for our honeymoon. Absolutely loved every moment!', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop' },
-  { name: 'Michael Chen', location: 'Singapore', text: 'Found the perfect business hotel with all the amenities I needed. The smart filters made it so easy to narrow down exactly what I was looking for.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop' },
-  { name: 'Emma Rodriguez', location: 'Barcelona, Spain', text: 'Incredible luxury stays at competitive prices. The platform is intuitive and the hotel quality exceeded all my expectations!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop' },
+  { name: 'Nuwan Perera', location: 'Colombo', text: 'The booking experience was seamless and the hotel recommendations were perfect for our honeymoon in Kandy. Absolutely loved every moment!', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop' },
+  { name: 'Chamari Silva', location: 'Kandy', text: 'Found the perfect business hotel with all the amenities I needed. The smart filters made it so easy to narrow down exactly what I was looking for.', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop' },
+  { name: 'Kasun Fernando', location: 'Galle', text: 'Incredible stays along the south coast at great prices. The platform is intuitive and the hotel quality exceeded all my expectations!', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop' },
 ];
+
+function Reveal({ children, delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        obs.disconnect();
+      }
+    }, { threshold: 0.12 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`landing-reveal ${visible ? 'landing-reveal-visible' : ''}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function StarRating() {
   return (
     <div className="star-row">
-      {[1,2,3,4,5].map(i => (
+      {[1, 2, 3, 4, 5].map(i => (
         <svg key={i} width="20" height="20" viewBox="0 0 20 20" fill="#F5A623">
           <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z" />
         </svg>
@@ -72,7 +100,7 @@ function HotelCard({ hotel }) {
           <span className="hotel-reviews">{hotel.reviews} reviews</span>
           <div className="hotel-price">
             <span className="hotel-price-from">From</span>
-            <span className="hotel-price-amount">${hotel.price}<span className="hotel-price-night">/night</span></span>
+            <span className="hotel-price-amount">{formatLKRFixed(hotel.price)}<span className="hotel-price-night">/night</span></span>
           </div>
         </div>
         <Link to={`/hotel/${hotel.id}`} className="hotel-card-btn">View Details</Link>
@@ -83,14 +111,20 @@ function HotelCard({ hotel }) {
 
 function DestinationCard({ dest }) {
   return (
-    <div className="dest-card">
+    <Link to={`/search?location=${dest.name}`} className="dest-card">
       <div className="dest-card-image" style={{ backgroundImage: `url(${dest.image})` }} />
       <div className="dest-card-overlay" />
       <div className="dest-card-content">
         <h3 className="dest-card-name">{dest.name}</h3>
-        <span className="dest-card-count">{dest.count}</span>
+        <span className="dest-card-count">{dest.count} Hotel{dest.count !== 1 ? 's' : ''}</span>
+        <span className="dest-card-explore">
+          Explore
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -110,17 +144,33 @@ function TestimonialCard({ t }) {
   );
 }
 
-const purposes = ['Business', 'Family', 'Couple', 'Honeymoon', 'Solo Travel', 'Friends Trip'];
-const events = ['Day Events', 'Night Events', 'Pool Parties', 'Live Music', 'Conferences', 'Wedding Events'];
+const purposes = TRAVEL_PURPOSES;
+
+const PRICE_MIN = 0;
+const PRICE_MAX = 100000;
 
 export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [hotels, setHotels] = useState([]);
-  const [bookings, setBookings] = useState([]);
+  const [showGuide, setShowGuide] = useState(() => sessionStorage.getItem('showHomeGuide') === '1');
+  const { data: hotels = [] } = useHotels();
+  const [destCounts, setDestCounts] = useState({});
+
+  useEffect(() => {
+    const names = DESTINATION_META.map(d => d.name);
+    hotelsAPI.destinationCounts(names).then(r => {
+      setDestCounts(r.data.counts || {});
+    }).catch(() => {});
+  }, []);
+  const { data: bookings = [] } = useQuery({
+    queryKey: ['bookings', 'user-home'],
+    queryFn: () => bookingsAPI.listUser().then(r => r.data.bookings || []),
+    enabled: !!user,
+  });
 
   // Search bar state
   const [location, setLocation] = useState('');
+  const [hotelName, setHotelName] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(2);
@@ -134,25 +184,139 @@ export default function Home() {
   const [ovRooms, setOvRooms] = useState(1);
   const [ovRating, setOvRating] = useState(null);
   const [ovPurpose, setOvPurpose] = useState(null);
-  const [ovEvent, setOvEvent] = useState(null);
+  const [ovEvents, setOvEvents] = useState([]);
+  const [ovAmenities, setOvAmenities] = useState([]);
+  const [ovMinPrice, setOvMinPrice] = useState('');
+  const [ovMaxPrice, setOvMaxPrice] = useState('');
+
+  const activeFilterCount = [
+    ovLocation, ovCheckIn, ovCheckOut, ovMinPrice, ovMaxPrice, ovRating, ovPurpose,
+  ].filter(Boolean).length + ovEvents.length + ovAmenities.length;
+
+  const minPriceVal = ovMinPrice ? Math.min(Number(ovMinPrice), PRICE_MAX) : PRICE_MIN;
+  const maxPriceVal = ovMaxPrice ? Math.max(Number(ovMaxPrice), PRICE_MIN) : PRICE_MAX;
+
+  const handleReset = () => {
+    setOvLocation('');
+    setOvCheckIn('');
+    setOvCheckOut('');
+    setOvGuests(2);
+    setOvRooms(1);
+    setOvMinPrice('');
+    setOvMaxPrice('');
+    setOvRating(null);
+    setOvPurpose(null);
+    setOvEvents([]);
+    setOvAmenities([]);
+    setCalOpen(null);
+  };
+
+  const handleMinSlider = (e) => {
+    const v = Number(e.target.value);
+    setOvMinPrice(String(v));
+    if (ovMaxPrice && v > Number(ovMaxPrice)) setOvMaxPrice(String(v));
+  };
+
+  const handleMaxSlider = (e) => {
+    const v = Number(e.target.value);
+    setOvMaxPrice(String(v));
+    if (ovMinPrice && v < Number(ovMinPrice)) setOvMinPrice(String(v));
+  };
+
+  const handleMinPriceInput = (e) => {
+    const v = e.target.value;
+    setOvMinPrice(v);
+    if (ovMaxPrice && v && Number(v) > Number(ovMaxPrice)) setOvMaxPrice(v);
+  };
+
+  const handleMaxPriceInput = (e) => {
+    const v = e.target.value;
+    setOvMaxPrice(v);
+    if (ovMinPrice && v && Number(v) < Number(ovMinPrice)) setOvMinPrice(v);
+  };
+
+  // Calendar popup state
+  const [calOpen, setCalOpen] = useState(null); // 'in' | 'out' | null
+  const [heroCalOpen, setHeroCalOpen] = useState(null); // 'in' | 'out' | null
+  const inFieldRef = useRef(null);
+  const outFieldRef = useRef(null);
+  const heroInFieldRef = useRef(null);
+  const heroOutFieldRef = useRef(null);
 
   useEffect(() => {
-    hotelsAPI.list()
-      .then(res => setHotels(res.data.hotels || res.data || []))
-      .catch(() => {});
-    try {
-      const saved = JSON.parse(localStorage.getItem('stayvora_bookings') || '[]');
-      setBookings(saved);
-    } catch {}
-  }, []);
+    if (!calOpen) return;
+    const handleMouseDown = (e) => {
+      if (e.target.closest && e.target.closest('.cal-popup')) return;
+      const field = calOpen === 'in' ? inFieldRef.current : outFieldRef.current;
+      if (field && !field.contains(e.target)) setCalOpen(null);
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
+  }, [calOpen]);
 
-  const displayHotels = hotels.length > 0 ? hotels : featuredHotels;
+  useEffect(() => {
+    if (!heroCalOpen) return;
+    const handleMouseDown = (e) => {
+      if (e.target.closest && e.target.closest('.cal-popup')) return;
+      const field = heroCalOpen === 'in' ? heroInFieldRef.current : heroOutFieldRef.current;
+      if (field && !field.contains(e.target)) setHeroCalOpen(null);
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
+  }, [heroCalOpen]);
+
+  // Escape closes overlay + body scroll lock while open
+  useEffect(() => {
+    if (!showOverlay) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setShowOverlay(false);
+        setCalOpen(null);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [showOverlay]);
+
+  const displayHotels = (hotels || []).map(h => ({
+    id: h.id,
+    name: h.name,
+    location: h.location || h.city || '',
+    desc: h.description || '',
+    price: h.min_room_price || 0,
+    rating: h.rating || 0,
+    reviews: h.total_reviews || 0,
+    image: h.image || '',
+    tags: h.amenities ? h.amenities.split(',').map(t => t.trim()).filter(Boolean).slice(0, 3) : [],
+  }));
+
+  const [sortBy, setSortBy] = useState('recommended');
+
+  const sortedHotels = [...displayHotels].sort((a, b) => {
+    switch (sortBy) {
+      case 'price_asc': return a.price - b.price;
+      case 'price_desc': return b.price - a.price;
+      case 'rating_desc': return b.rating - a.rating;
+      case 'name': return a.name.localeCompare(b.name);
+      default: return 0;
+    }
+  });
+
+  const HOTELS_LIMIT = 20;
+  const shownHotels = sortedHotels.slice(0, HOTELS_LIMIT);
+  const hasMoreHotels = sortedHotels.length > HOTELS_LIMIT;
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (location) params.set('location', location);
-    if (checkIn) params.set('checkIn', checkIn);
-    if (checkOut) params.set('checkOut', checkOut);
+    if (hotelName) params.set('location', hotelName);
+    else if (location) params.set('location', location);
+    if (checkIn) params.set('check_in', checkIn);
+    if (checkOut) params.set('check_out', checkOut);
     if (guests) params.set('guests', guests);
     navigate(`/search?${params.toString()}`);
   };
@@ -167,6 +331,7 @@ export default function Home() {
 
   const closeOverlay = () => {
     setShowOverlay(false);
+    setCalOpen(null);
   };
 
   const handleOverlaySearch = () => {
@@ -178,13 +343,16 @@ export default function Home() {
 
     const params = new URLSearchParams();
     if (ovLocation) params.set('location', ovLocation);
-    if (ovCheckIn) params.set('checkIn', ovCheckIn);
-    if (ovCheckOut) params.set('checkOut', ovCheckOut);
+    if (ovCheckIn) params.set('check_in', ovCheckIn);
+    if (ovCheckOut) params.set('check_out', ovCheckOut);
     if (ovGuests) params.set('guests', ovGuests);
     if (ovRooms) params.set('rooms', ovRooms);
+    if (ovMinPrice) params.set('min_price', ovMinPrice);
+    if (ovMaxPrice) params.set('max_price', ovMaxPrice);
     if (ovRating) params.set('rating', ovRating);
-    if (ovPurpose) params.set('purpose', ovPurpose);
-    if (ovEvent) params.set('event', ovEvent);
+    if (ovPurpose) params.set('travel_purpose', ovPurpose);
+    if (ovEvents.length > 0) params.set('event', ovEvents.join(','));
+    if (ovAmenities.length > 0) params.set('amenity', ovAmenities.join(','));
     navigate(`/search?${params.toString()}`);
   };
 
@@ -193,16 +361,17 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="home-hero">
-        <div className="home-hero-bg" />
+        <div className="home-hero-bg" style={{ backgroundImage: `url(${UPLOAD_HOST}/uploads/landing-page-image.jpg)` }} />
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
-          <h1 className="home-hero-title">Discover Luxury Stays Designed<br />Around Your Journey</h1>
-          <p className="home-hero-subtitle">Smart hotel discovery platform for travelers, families, business trips,<br />honeymoon stays, and unforgettable experiences.</p>
+          
+          <h1 className="home-hero-title">Discover <span className="home-hero-title-accent">Luxury Stays</span> Designed<br />Around Your Journey</h1>
+          <p className="home-hero-subtitle">Smart hotel discovery platform for travelers, based on their purpos, events, prices, etc..</p>
         </div>
 
         {/* ===== SEARCH BAR ===== */}
         <div className="home-search-bar">
-          <div className="search-field">
+          <div className="search-field search-field-location">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M15 10.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" stroke="#2563EB" strokeWidth="1.5" />
               <path d="M19 19l-4.35-4.35" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" />
@@ -219,7 +388,23 @@ export default function Home() {
             </div>
           </div>
           <div className="search-divider" />
-          <div className="search-field">
+          <div className="search-field search-field-location">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round">
+              <path d="M20 21v-2a4 4 0 0 0-3-3.87M12 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87M4 21v-1m0-5.13A4 4 0 0 1 4 9.13M13.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+            </svg>
+            <div className="search-field-text">
+              <span className="search-label">Hotel name</span>
+              <input
+                type="text"
+                className="search-input search-input-location"
+                placeholder="Search by hotel name..."
+                value={hotelName}
+                onChange={(e) => setHotelName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="search-divider" />
+          <div className="search-field search-field-date" ref={heroInFieldRef}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <rect x="2.25" y="3.75" width="19.5" height="18" rx="2" stroke="#2563EB" strokeWidth="1.5" />
               <path d="M2.25 9.75h19.5" stroke="#2563EB" strokeWidth="1.5" />
@@ -227,15 +412,29 @@ export default function Home() {
             <div className="search-field-text">
               <span className="search-label">Check in</span>
               <input
-                type="date"
-                className="search-input search-input-date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
+                type="text"
+                readOnly
+                className="search-input"
+                placeholder="Add date"
+                value={checkIn ? formatDisplay(checkIn) : ''}
+                onClick={() => setHeroCalOpen(heroCalOpen === 'in' ? null : 'in')}
               />
             </div>
+            {heroCalOpen === 'in' && (
+              <CalendarPicker
+                value={checkIn}
+                minDate={toDateInput(new Date())}
+                onSelect={(d) => {
+                  setCheckIn(d);
+                  if (checkOut && checkOut < d) setCheckOut('');
+                }}
+                onClose={() => setHeroCalOpen(null)}
+                anchorRef={heroInFieldRef}
+              />
+            )}
           </div>
           <div className="search-divider" />
-          <div className="search-field">
+          <div className="search-field search-field-date" ref={heroOutFieldRef}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <rect x="2.25" y="3.75" width="19.5" height="18" rx="2" stroke="#2563EB" strokeWidth="1.5" />
               <path d="M2.25 9.75h19.5" stroke="#2563EB" strokeWidth="1.5" />
@@ -243,12 +442,24 @@ export default function Home() {
             <div className="search-field-text">
               <span className="search-label">Check out</span>
               <input
-                type="date"
-                className="search-input search-input-date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
+                type="text"
+                readOnly
+                className="search-input"
+                placeholder="Add date"
+                value={checkOut ? formatDisplay(checkOut) : ''}
+                onClick={() => setHeroCalOpen(heroCalOpen === 'out' ? null : 'out')}
               />
             </div>
+            {heroCalOpen === 'out' && (
+              <CalendarPicker
+                value={checkOut}
+                minDate={checkIn || toDateInput(new Date())}
+                onSelect={(d) => setCheckOut(d)}
+                onClose={() => setHeroCalOpen(null)}
+                alignRight
+                anchorRef={heroOutFieldRef}
+              />
+            )}
           </div>
           <div className="search-divider" />
           <div className="search-field">
@@ -263,7 +474,7 @@ export default function Home() {
                 value={guests}
                 onChange={(e) => setGuests(Number(e.target.value))}
               >
-                {[1,2,3,4,5,6].map(n => (
+                {[1, 2, 3, 4, 5, 6].map(n => (
                   <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>
                 ))}
               </select>
@@ -277,24 +488,68 @@ export default function Home() {
             Search
           </button>
         </div>
-        <div className="home-additional-filter" onClick={openOverlay}>Additional filter</div>
+
+        
+        <div className="home-additional-filter" onClick={openOverlay}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+          </svg>
+          <span>Additional Filters</span>
+          {activeFilterCount > 0 && <span className="home-additional-filter-badge">{activeFilterCount}</span>}
+        </div>
+
+        <div className="home-hero-cue">
+          <span>Scroll to explore</span>
+          <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
+            <path d="M1 1l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        {showGuide && (
+          <div className="home-guide-popup">
+            <div className="home-guide-popup-pointer" />
+            <button
+              className="home-guide-close"
+              onClick={() => { setShowGuide(false); sessionStorage.removeItem('showHomeGuide'); }}
+              aria-label="Close guide"
+            >✕</button>
+            <div className="home-guide-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+              </svg>
+            </div>
+            <h4 className="home-guide-title">New here? Let's guide you!</h4>
+            <p className="home-guide-text">
+              Use <strong>Additional Filters</strong> to refine your stay by location, price, rating, travel purpose, events, and amenities.
+            </p>
+            <button
+              className="home-guide-btn"
+              onClick={() => { setShowGuide(false); sessionStorage.removeItem('showHomeGuide'); }}
+            >Got it</button>
+          </div>
+        )}
       </section>
 
       {/* ===== MY BOOKINGS ===== */}
       <section className="home-dashboard-section">
         <div className="home-section-container">
-          <div className="dashboard-header-row">
-            <div>
-              <h2 className="dashboard-title">My Bookings</h2>
-              <p className="dashboard-subtitle">Welcome back, {user?.name || 'Traveler'}</p>
+          <Reveal>
+            <div className="dashboard-header-row">
+              <div>
+                
+                <h2 className="dashboard-title">My Bookings</h2>
+                <p className="dashboard-subtitle">Welcome back, {user?.name || 'Traveler'}</p>
+              </div>
             </div>
-          </div>
+          </Reveal>
 
           {bookings.length === 0 ? (
-            <div className="dashboard-empty">
-              <h3>No bookings yet</h3>
-              <p>Start exploring hotels and book your first stay!</p>
-            </div>
+            <Reveal>
+              <div className="dashboard-empty">
+                <h3>No bookings yet</h3>
+                <p>Start exploring hotels and book your first stay!</p>
+              </div>
+            </Reveal>
           ) : (
             <div className="dashboard-table-wrap">
               <table className="dashboard-table">
@@ -311,14 +566,22 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {bookings.map((b) => (
-                    <tr key={b.id}>
-                      <td data-label="Hotel">{b.hotel}</td>
-                      <td data-label="Room">{b.room}</td>
-                      <td data-label="Check-in">{b.checkIn}</td>
-                      <td data-label="Check-out">{b.checkOut}</td>
-                      <td data-label="Total">${b.total}</td>
-                      <td data-label="Status"><span className="db-badge db-badge-success">{b.status}</span></td>
-                      <td data-label="Booked On">{b.bookedOn}</td>
+                    <tr
+                      key={b.id}
+                      className="dashboard-row-link"
+                      onClick={() => navigate(`/my-booking/${b.booking_code}`)}
+                    >
+                      <td data-label="Hotel">{b.hotel_name || b.hotel}</td>
+                      <td data-label="Room">{b.room_type || b.room}</td>
+                      <td data-label="Check-in">{b.check_in || b.checkIn}</td>
+                      <td data-label="Check-out">{b.check_out || b.checkOut}</td>
+                      <td data-label="Total">{formatLKRFixed(b.total_price || b.total)}</td>
+                      <td data-label="Status">
+                        <span className={`db-badge db-badge-${b.status === 'cancelled' ? 'error' : b.status === 'pending' ? 'warning' : 'success'}`}>
+                          {b.status}
+                        </span>
+                      </td>
+                      <td data-label="Booked On">{b.created_at || b.bookedOn}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -331,34 +594,60 @@ export default function Home() {
       {/* ===== HOTELS ===== */}
       <section className="home-hotels-section">
         <div className="home-section-container">
-          <div className="hotels-header">
-            <div>
-              <h2 className="hotels-title">Curated Luxury Hotels</h2>
-              <p className="hotels-subtitle">240 premium properties match your preferences</p>
+          <Reveal>
+            <div className="hotels-header">
+              <div>
+                
+                <h2 className="hotels-title">Curated Luxury Hotels</h2>
+                <p className="hotels-subtitle">{displayHotels.length} premium {displayHotels.length === 1 ? 'property' : 'properties'} match your preferences</p>
+              </div>
+              <div className="sort-wrap">
+                <select className="sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                  <option value="recommended">Sort by: Recommended</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="rating_desc">Rating: High to Low</option>
+                  <option value="name">Name: A to Z</option>
+                </select>
+                <svg className="sort-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#1A2B49" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
             </div>
-            <div className="sort-dropdown">
-              <span>Sort by: Recommended</span>
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="#1A2B49" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-          </div>
+          </Reveal>
           <div className="hotels-grid">
-            {displayHotels.map(hotel => (
-              <HotelCard key={hotel.id} hotel={hotel} />
+            {shownHotels.map((hotel, i) => (
+              <Reveal key={hotel.id} delay={i * 70}>
+                <HotelCard hotel={hotel} />
+              </Reveal>
             ))}
           </div>
+          {hasMoreHotels && (
+            <div className="hotels-show-more-wrap">
+              <Link to="/search" className="hotels-show-more-btn">
+                Show More Hotels
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
       {/* ===== TRENDING DESTINATIONS ===== */}
       <section className="home-destinations-section">
         <div className="home-section-container">
-          <h2 className="dest-title">Explore Trending Destinations</h2>
-          <p className="dest-subtitle">Handpicked locations for your next adventure</p>
+          <Reveal>
+            
+            <h2 className="dest-title">Explore Trending Destinations</h2>
+            <p className="dest-subtitle">Handpicked locations for your next adventure</p>
+          </Reveal>
           <div className="dest-grid">
-            {destinations.map((d, i) => (
-              <DestinationCard key={i} dest={d} />
+            {DESTINATION_META.map((d, i) => (
+              <Reveal key={d.name} delay={i * 80}>
+                <DestinationCard dest={{ ...d, count: destCounts[d.name] ?? 0 }} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -367,10 +656,15 @@ export default function Home() {
       {/* ===== TESTIMONIALS ===== */}
       <section className="home-testimonials-section">
         <div className="home-section-container">
-          <h2 className="testimonials-title">Loved by Travelers Islandwide</h2>
+          <Reveal>
+            
+            <h2 className="testimonials-title">Loved by Travelers Islandwide</h2>
+          </Reveal>
           <div className="testimonials-grid">
             {testimonials.map((t, i) => (
-              <TestimonialCard key={i} t={t} />
+              <Reveal key={t.name} delay={i * 90}>
+                <TestimonialCard t={t} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -380,69 +674,189 @@ export default function Home() {
       <div className={`ov-overlay ${showOverlay ? 'ov-active' : ''}`} onClick={closeOverlay}>
         <div className={`ov-modal ${showOverlay ? 'ov-modal-open' : ''}`} onClick={(e) => e.stopPropagation()}>
           <div className="ov-header">
-            <h3 className="ov-title">Filters</h3>
-            <button className="ov-close" onClick={closeOverlay}>✕</button>
+            <div className="ov-header-left">
+              
+              <h3 className="ov-title">Additional Filters</h3>
+              <p className="ov-subtitle">Refine your stay with smart filters</p>
+            </div>
+            <div className="ov-header-actions">
+              {activeFilterCount > 0 && <span className="ov-count">{activeFilterCount} active</span>}
+              <button className="ov-reset" onClick={handleReset}>Reset</button>
+              <button className="ov-close" onClick={closeOverlay}>✕</button>
+            </div>
           </div>
           <div className="ov-body">
             {/* Location */}
-            <div className="ov-field">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M11.25 3.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" stroke="#D4AF37" strokeWidth="1.25"/>
-                <path d="M14 14l-3.63-3.63" stroke="#D4AF37" strokeWidth="1.25" strokeLinecap="round"/>
-              </svg>
-              <input
-                type="text"
-                placeholder="Where do you want to go?"
-                value={ovLocation}
-                onChange={(e) => setOvLocation(e.target.value)}
-              />
+            <div className="ov-field-group">
+              <label className="ov-label">Location</label>
+              <div className="ov-field">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M11.25 3.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" stroke="#F5A624" strokeWidth="1.25" />
+                  <path d="M14 14l-3.63-3.63" stroke="#F5A624" strokeWidth="1.25" strokeLinecap="round" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Where do you want to go?"
+                  value={ovLocation}
+                  onChange={(e) => setOvLocation(e.target.value)}
+                />
+              </div>
             </div>
 
             {/* Check-in / Check-out */}
-            <div className="ov-row">
-              <div className="ov-field ov-half">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="1.5" y="2.5" width="13" height="12" rx="1.5" stroke="#D4AF37" strokeWidth="1.25"/>
-                  <path d="M4 1v3M12 1v3M1.5 6h13" stroke="#D4AF37" strokeWidth="1.25"/>
-                </svg>
-                <input type="date" value={ovCheckIn} onChange={(e) => setOvCheckIn(e.target.value)} />
-              </div>
-              <div className="ov-field ov-half">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="1.5" y="2.5" width="13" height="12" rx="1.5" stroke="#D4AF37" strokeWidth="1.25"/>
-                  <path d="M4 1v3M12 1v3M1.5 6h13" stroke="#D4AF37" strokeWidth="1.25"/>
-                </svg>
-                <input type="date" value={ovCheckOut} onChange={(e) => setOvCheckOut(e.target.value)} />
+            <div className="ov-field-group">
+              <label className="ov-label">Stay Dates</label>
+              <div className="ov-row">
+                <div className="ov-field ov-half ov-date-field" ref={inFieldRef}>
+                  <button
+                    type="button"
+                    className="ov-cal-trigger"
+                    onClick={() => setCalOpen(calOpen === 'in' ? null : 'in')}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <rect x="1.5" y="2.5" width="13" height="12" rx="1.5" stroke="#F5A624" strokeWidth="1.25" />
+                      <path d="M4 1v3M12 1v3M1.5 6h13" stroke="#F5A624" strokeWidth="1.25" />
+                    </svg>
+                  </button>
+                  <input
+                    type="text"
+                    readOnly
+                    placeholder="Check-in"
+                    value={ovCheckIn ? formatDisplay(ovCheckIn) : ''}
+                    onClick={() => setCalOpen(calOpen === 'in' ? null : 'in')}
+                  />
+                  {calOpen === 'in' && (
+                    <CalendarPicker
+                      value={ovCheckIn}
+                      minDate={toDateInput(new Date())}
+                      onSelect={(d) => {
+                        setOvCheckIn(d);
+                        if (ovCheckOut && ovCheckOut < d) setOvCheckOut('');
+                      }}
+                      onClose={() => setCalOpen(null)}
+                    />
+                  )}
+                </div>
+                <div className="ov-field ov-half ov-date-field" ref={outFieldRef}>
+                  <button
+                    type="button"
+                    className="ov-cal-trigger"
+                    onClick={() => setCalOpen(calOpen === 'out' ? null : 'out')}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <rect x="1.5" y="2.5" width="13" height="12" rx="1.5" stroke="#F5A624" strokeWidth="1.25" />
+                      <path d="M4 1v3M12 1v3M1.5 6h13" stroke="#F5A624" strokeWidth="1.25" />
+                    </svg>
+                  </button>
+                  <input
+                    type="text"
+                    readOnly
+                    placeholder="Check-out"
+                    value={ovCheckOut ? formatDisplay(ovCheckOut) : ''}
+                    onClick={() => setCalOpen(calOpen === 'out' ? null : 'out')}
+                  />
+                  {calOpen === 'out' && (
+                    <CalendarPicker
+                      value={ovCheckOut}
+                      minDate={ovCheckIn || toDateInput(new Date())}
+                      onSelect={(d) => setOvCheckOut(d)}
+                      onClose={() => setCalOpen(null)}
+                      alignRight
+                    />
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Guests & Rooms */}
-            <div className="ov-field">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M5.5 5a2 2 0 100-4 2 2 0 000 4z" stroke="#D4AF37" strokeWidth="1.25"/>
-                <path d="M1 14v-1.5a3 3 0 013-3h3a3 3 0 013 3V14" stroke="#D4AF37" strokeWidth="1.25"/>
-              </svg>
-              <select value={ovGuests} onChange={(e) => setOvGuests(Number(e.target.value))}>
-                {[1,2,3,4,5,6,7,8].map(n => (
-                  <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>
-                ))}
-              </select>
-              <span className="ov-sep">·</span>
-              <select value={ovRooms} onChange={(e) => setOvRooms(Number(e.target.value))}>
-                {[1,2,3,4,5].map(n => (
-                  <option key={n} value={n}>{n} Room{n > 1 ? 's' : ''}</option>
-                ))}
-              </select>
+            <div className="ov-field-group">
+              <label className="ov-label">Guests & Rooms</label>
+              <div className="ov-field">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M5.5 5a2 2 0 100-4 2 2 0 000 4z" stroke="#F5A624" strokeWidth="1.25" />
+                  <path d="M1 14v-1.5a3 3 0 013-3h3a3 3 0 013 3V14" stroke="#F5A624" strokeWidth="1.25" />
+                </svg>
+                <span className="ov-select-wrap">
+                  <select value={ovGuests} onChange={(e) => setOvGuests(Number(e.target.value))}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(n => (
+                      <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                  <svg className="ov-select-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path d="M1 1l4 4 4-4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="ov-sep">·</span>
+                <span className="ov-select-wrap">
+                  <select value={ovRooms} onChange={(e) => setOvRooms(Number(e.target.value))}>
+                    {[1, 2, 3, 4, 5].map(n => (
+                      <option key={n} value={n}>{n} Room{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                  <svg className="ov-select-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path d="M1 1l4 4 4-4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </div>
             </div>
 
             {/* Price Range */}
             <div className="ov-section">
               <div className="ov-section-header">
                 <span>Price Range</span>
-                <span className="ov-price-value">$0 - $5000+</span>
+                <span className="ov-price-value">{formatLKRFixed(minPriceVal)} - {maxPriceVal >= PRICE_MAX ? `${PRICE_MAX.toLocaleString('en-IN')}+` : formatLKRFixed(maxPriceVal)}</span>
               </div>
-              <div className="ov-slider-track">
-                <div className="ov-slider-fill" />
+              <div className="ov-range-wrap">
+                <div className="ov-range-track" />
+                <div
+                  className="ov-range-fill"
+                  style={{
+                    left: `${(minPriceVal / PRICE_MAX) * 100}%`,
+                    width: `${((maxPriceVal - minPriceVal) / PRICE_MAX) * 100}%`,
+                  }}
+                />
+                <input
+                  type="range"
+                  className="ov-range ov-range-min"
+                  min={PRICE_MIN}
+                  max={PRICE_MAX}
+                  step={500}
+                  value={minPriceVal}
+                  onChange={handleMinSlider}
+                  aria-label="Minimum price"
+                />
+                <input
+                  type="range"
+                  className="ov-range ov-range-max"
+                  min={PRICE_MIN}
+                  max={PRICE_MAX}
+                  step={500}
+                  value={maxPriceVal}
+                  onChange={handleMaxSlider}
+                  aria-label="Maximum price"
+                />
+              </div>
+              <div className="ov-row">
+                <div className="ov-price-input">
+                  <label className="ov-label">Min Price</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 5000"
+                    value={ovMinPrice}
+                    onChange={handleMinPriceInput}
+                  />
+                </div>
+                <div className="ov-price-input">
+                  <label className="ov-label">Max Price</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 50000"
+                    value={ovMaxPrice}
+                    onChange={handleMaxPriceInput}
+                  />
+                </div>
               </div>
             </div>
 
@@ -456,7 +870,7 @@ export default function Home() {
                     className={`ov-chip ${ovRating === r ? 'ov-chip-active' : ''}`}
                     onClick={() => setOvRating(ovRating === r ? null : r)}
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="#D4AF37">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="#F5A624">
                       <path d="M8 1l1.91 3.87 4.27.62-3.09 3.01.73 4.25L8 11.42l-3.82 2.01.73-4.25-3.09-3.01 4.27-.62L8 1z" />
                     </svg>
                     {r}
@@ -481,17 +895,33 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Event Filters */}
+            {/* Event */}
             <div className="ov-section">
-              <div className="ov-section-header"><span>Event Filters</span></div>
+              <div className="ov-section-header"><span>Events</span></div>
               <div className="ov-chips ov-chips-pill">
-                {events.map(e => (
+                {EVENT_TYPES.map(t => (
                   <button
-                    key={e}
-                    className={`ov-pill ${ovEvent === e ? 'ov-pill-active' : ''}`}
-                    onClick={() => setOvEvent(ovEvent === e ? null : e)}
+                    key={t}
+                    className={`ov-pill ${ovEvents.includes(t) ? 'ov-pill-active' : ''}`}
+                    onClick={() => setOvEvents(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])}
                   >
-                    {e}
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Amenity */}
+            <div className="ov-section">
+              <div className="ov-section-header"><span>Amenities</span></div>
+              <div className="ov-chips ov-chips-pill">
+                {AMENITIES.map(a => (
+                  <button
+                    key={a}
+                    className={`ov-pill ${ovAmenities.includes(a) ? 'ov-pill-active' : ''}`}
+                    onClick={() => setOvAmenities(prev => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])}
+                  >
+                    {a}
                   </button>
                 ))}
               </div>
@@ -499,6 +929,7 @@ export default function Home() {
           </div>
 
           <div className="ov-footer">
+            <button className="ov-reset-btn" onClick={handleReset}>Reset Filters</button>
             <button className="ov-search-btn" onClick={handleOverlaySearch}>
               Search Luxury Stays
             </button>

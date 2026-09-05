@@ -1,303 +1,333 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { hotelsAPI } from '../utils/api';
-import { Link } from 'react-router-dom';
+import SearchHotelCard from '../components/SearchHotelCard/SearchHotelCard';
+import FilterPanel from '../components/FilterPanel/FilterPanel';
+import { formatDisplay } from '../components/CalendarPicker/CalendarPicker';
+import { formatLKRFixed } from '../utils/currency';
 import './SearchResults.css';
-
-const travelPurposes = ['Business', 'Family', 'Couple', 'Honeymoon', 'Solo Travel', 'Friends Trip'];
-const eventFilters = ['Day Events', 'Night Events', 'Pool Parties', 'Live Music', 'Conferences', 'Wedding Events'];
-
-const sampleHotels = [
-  { id: 1, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 2, name: 'Miami Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 3, name: 'Jungle villa', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1572307480816-4ae3267c8c0f?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 4, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 5, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 6, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 7, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 8, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-  { id: 9, name: 'Seaside Resort', location: 'Beachfront, Miami', desc: 'Beachfront paradise with direct ocean access and tropical vibes.', price: 249, rating: 4.6, reviews: 892, image: 'https://images.unsplash.com/photo-1572307480816-4ae3267c8c0f?w=352&h=256&fit=crop', tags: ['Beach Access', 'Pool', 'Bar'] },
-];
-
-function HotelCard({ hotel }) {
-  return (
-    <div className="sr-hotel-card">
-      <div className="sr-hotel-card-image">
-        <img src={hotel.image} alt={hotel.name} />
-        <div className="sr-rating-badge">
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="white">
-            <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z" />
-          </svg>
-          <span>{hotel.rating}</span>
-        </div>
-        <div className="sr-card-location">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="1.33">
-            <path d="M8 1.33c-2.21 0-4 1.79-4 4 0 3 4 7.34 4 7.34s4-4.34 4-7.34c0-2.21-1.79-4-4-4z" />
-            <circle cx="8" cy="5.33" r="1.33" fill="white" />
-          </svg>
-          <span>{hotel.location}</span>
-        </div>
-      </div>
-      <div className="sr-hotel-card-body">
-        <h3 className="sr-hotel-name">{hotel.name}</h3>
-        <p className="sr-hotel-desc">{hotel.desc}</p>
-        <div className="sr-hotel-tags">
-          {hotel.tags.map(tag => (
-            <span key={tag} className="sr-tag">{tag}</span>
-          ))}
-          <span className="sr-tag sr-tag-more">+2 more</span>
-        </div>
-        <div className="sr-hotel-divider" />
-        <div className="sr-hotel-footer">
-          <span className="sr-reviews">{hotel.reviews} reviews</span>
-          <div className="sr-price">
-            <span className="sr-price-from">From</span>
-            <span className="sr-price-amount">${hotel.price}<span className="sr-price-night">/night</span></span>
-          </div>
-        </div>
-        <Link to={`/hotel/${hotel.id}`} className="sr-view-btn">View Details</Link>
-      </div>
-    </div>
-  );
-}
 
 export default function SearchResults() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [hotels, setHotels] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const buildParams = () => {
+    const p = {};
+    const locationVal = searchParams.get('location');
+    const checkInVal = searchParams.get('check_in');
+    const checkOutVal = searchParams.get('check_out');
+    const guestsVal = searchParams.get('guests');
+    const roomsVal = searchParams.get('rooms');
+    const minPriceVal = searchParams.get('min_price');
+    const maxPriceVal = searchParams.get('max_price');
+    const ratingVal = searchParams.get('rating');
+    const purposeVal = searchParams.get('travel_purpose');
+    const eventVal = searchParams.get('event');
+    const amenityVal = searchParams.get('amenity');
+    if (locationVal) p.location = locationVal;
+    if (checkInVal) p.check_in = checkInVal;
+    if (checkOutVal) p.check_out = checkOutVal;
+    if (guestsVal) p.guests = guestsVal;
+    if (roomsVal) p.rooms = roomsVal;
+    if (minPriceVal) p.min_price = minPriceVal;
+    if (maxPriceVal) p.max_price = maxPriceVal;
+    if (ratingVal) p.rating = ratingVal;
+    if (purposeVal) p.travel_purpose = purposeVal;
+    if (eventVal) p.event = eventVal;
+    if (amenityVal) p.amenity = amenityVal;
+    return p;
+  };
 
-  const [location, setLocation] = useState(searchParams.get('location') || '');
-  const [checkIn, setCheckIn] = useState(searchParams.get('checkIn') || '');
-  const [checkOut, setCheckOut] = useState(searchParams.get('checkOut') || '');
-  const [guests, setGuests] = useState(Number(searchParams.get('guests')) || 2);
-  const [rooms, setRooms] = useState(Number(searchParams.get('rooms')) || 1);
-  const [selectedRating, setSelectedRating] = useState(searchParams.get('rating') ? Number(searchParams.get('rating')) : null);
-  const [selectedPurpose, setSelectedPurpose] = useState(searchParams.get('purpose') || searchParams.get('purpose_below') || null);
-  const [selectedEvent, setSelectedEvent] = useState(searchParams.get('event') || searchParams.get('event_below') || null);
+  const initialFilters = {
+    location: searchParams.get('location') || '',
+    check_in: searchParams.get('check_in') || '',
+    check_out: searchParams.get('check_out') || '',
+    guests: searchParams.get('guests') || '',
+    rooms: searchParams.get('rooms') || '',
+    min_price: searchParams.get('min_price') || '',
+    max_price: searchParams.get('max_price') || '',
+    rating: searchParams.get('rating') || '',
+    travel_purpose: searchParams.get('travel_purpose') || '',
+    event: searchParams.get('event') || '',
+    amenity: searchParams.get('amenity') || '',
+  };
 
-  useEffect(() => {
-    const params = {};
-    if (location) params.search = location;
-    if (selectedRating) params.rating = selectedRating;
-    if (selectedPurpose) params.travel_purpose = selectedPurpose;
-    if (selectedEvent) params.event = selectedEvent;
-    if (checkIn && checkOut) { params.check_in = checkIn; params.check_out = checkOut; }
+  const queryParams = buildParams();
+  const hasParams = Object.keys(queryParams).length > 0;
 
-    setLoading(true);
-    hotelsAPI.search(params)
-      .then(res => setHotels(res.data.hotels || res.data || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [location, checkIn, checkOut, selectedRating, selectedPurpose, selectedEvent]);
+  const { data: rawHotels = [], isLoading: loading } = useQuery({
+    queryKey: hasParams ? ['hotels', 'search', queryParams] : ['hotels', 'list'],
+    queryFn: () => (hasParams ? hotelsAPI.search(queryParams) : hotelsAPI.list()).then(r => r.data.hotels || []),
+  });
 
-  const displayHotels = hotels.length > 0 ? hotels : sampleHotels;
+  const displayHotels = rawHotels.map(h => ({
+    id: h.id,
+    name: h.name,
+    location: h.location || h.city || '',
+    city: h.city || '',
+    desc: h.description || '',
+    price: h.min_room_price || 0,
+    rating: h.rating || 0,
+    reviews: h.total_reviews || 0,
+    image: h.image || '',
+    tags: h.amenities ? h.amenities.split(',').map(t => t.trim()).filter(Boolean).slice(0, 3) : [],
+  }));
 
-  const handleSidebarSearch = () => {
+  const [sortBy, setSortBy] = useState('recommended');
+  const [searchText, setSearchText] = useState('');
+  const [searchApplied, setSearchApplied] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+
+  const sortedHotels = displayHotels
+    .filter(h => {
+      if (!searchApplied) return true;
+      const q = searchApplied.toLowerCase();
+      return (h.name || '').toLowerCase().includes(q)
+        || (h.location || '').toLowerCase().includes(q)
+        || (h.city || '').toLowerCase().includes(q);
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'price_asc': return a.price - b.price;
+        case 'price_desc': return b.price - a.price;
+        case 'rating_desc': return b.rating - a.rating;
+        case 'name': return a.name.localeCompare(b.name);
+        default: return 0;
+      }
+    });
+
+  const handleFilter = (filters) => {
     const params = new URLSearchParams();
-    if (location) params.set('location', location);
-    if (checkIn) params.set('checkIn', checkIn);
-    if (checkOut) params.set('checkOut', checkOut);
-    if (guests) params.set('guests', guests);
-    if (rooms) params.set('rooms', rooms);
-    if (selectedRating) params.set('rating', selectedRating);
-    if (selectedPurpose) params.set('purpose', selectedPurpose);
-    if (selectedEvent) params.set('event', selectedEvent);
+    if (filters.location) params.set('location', filters.location);
+    if (filters.check_in) params.set('check_in', filters.check_in);
+    if (filters.check_out) params.set('check_out', filters.check_out);
+    if (filters.guests) params.set('guests', filters.guests);
+    if (filters.rooms) params.set('rooms', filters.rooms);
+    if (filters.min_price) params.set('min_price', filters.min_price);
+    if (filters.max_price) params.set('max_price', filters.max_price);
+    if (filters.rating) params.set('rating', filters.rating);
+    if (filters.travel_purpose) params.set('travel_purpose', filters.travel_purpose);
+    if (filters.event) params.set('event', filters.event);
+    if (filters.amenity) params.set('amenity', filters.amenity);
     navigate(`/search?${params.toString()}`);
   };
+
+  const updateParams = (mutator) => {
+    const params = new URLSearchParams(window.location.search);
+    mutator(params);
+    const qs = params.toString();
+    navigate(qs ? `/search?${qs}` : '/search');
+  };
+
+  const removeParam = (key) => updateParams((p) => p.delete(key));
+  const clearAll = () => navigate('/search');
+
+  const removeFilterChip = (c) => {
+    if (c.param) {
+      updateParams((p) => {
+        const vals = (p.get(c.param) || '').split(',').map(s => s.trim()).filter(Boolean);
+        const next = vals.filter(v => v !== c.label);
+        if (next.length > 0) p.set(c.param, next.join(','));
+        else p.delete(c.param);
+      });
+    } else {
+      removeParam(c.key);
+    }
+  };
+
+  const criteriaChips = [];
+  if (initialFilters.location) criteriaChips.push({ key: 'location', label: initialFilters.location });
+  if (initialFilters.check_in && initialFilters.check_out) {
+    criteriaChips.push({ key: 'check_in', label: `${formatDisplay(initialFilters.check_in)} - ${formatDisplay(initialFilters.check_out)}`, range: true });
+  } else if (initialFilters.check_in) {
+    criteriaChips.push({ key: 'check_in', label: `From ${formatDisplay(initialFilters.check_in)}` });
+  } else if (initialFilters.check_out) {
+    criteriaChips.push({ key: 'check_out', label: `Until ${formatDisplay(initialFilters.check_out)}` });
+  }
+  if (initialFilters.guests) criteriaChips.push({ key: 'guests', label: `${initialFilters.guests} Guest${Number(initialFilters.guests) > 1 ? 's' : ''}` });
+  if (initialFilters.rooms) criteriaChips.push({ key: 'rooms', label: `${initialFilters.rooms} Room${Number(initialFilters.rooms) > 1 ? 's' : ''}` });
+
+  const filterChips = [];
+  if (initialFilters.min_price) filterChips.push({ key: 'min_price', label: `Min ${formatLKRFixed(initialFilters.min_price)}` });
+  if (initialFilters.max_price) filterChips.push({ key: 'max_price', label: `Max ${formatLKRFixed(initialFilters.max_price)}` });
+  if (initialFilters.rating) filterChips.push({ key: 'rating', label: `${initialFilters.rating}★ & up` });
+  if (initialFilters.travel_purpose) filterChips.push({ key: 'travel_purpose', label: initialFilters.travel_purpose });
+  (initialFilters.event ? initialFilters.event.split(',').map(s => s.trim()).filter(Boolean) : []).forEach(v => filterChips.push({ key: `event:${v}`, param: 'event', label: v }));
+  (initialFilters.amenity ? initialFilters.amenity.split(',').map(s => s.trim()).filter(Boolean) : []).forEach(v => filterChips.push({ key: `amenity:${v}`, param: 'amenity', label: v }));
+
+  const title = initialFilters.location ? `Hotels in ${initialFilters.location}` : 'Curated Luxury Hotels';
+  const dateLabel = initialFilters.check_in && initialFilters.check_out
+    ? `${formatDisplay(initialFilters.check_in)} - ${formatDisplay(initialFilters.check_out)}`
+    : '';
+  const metaParts = [];
+  if (dateLabel) metaParts.push(dateLabel);
+  if (initialFilters.guests) metaParts.push(`${initialFilters.guests} guest${Number(initialFilters.guests) > 1 ? 's' : ''}`);
+  if (initialFilters.rooms) metaParts.push(`${initialFilters.rooms} room${Number(initialFilters.rooms) > 1 ? 's' : ''}`);
+
+  const totalChips = criteriaChips.length + filterChips.length;
 
   return (
     <div className="sr-page">
       <div className="sr-layout">
-        {/* ===== SIDEBAR FILTERS ===== */}
+        {/* ===== FILTERS ===== */}
         <aside className="sr-sidebar">
-          <div className="sr-filter-form">
-            {/* Where to go */}
-            <div className="sr-input-wrap">
-              <div className="sr-input-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="9.38" cy="9.38" r="5.63" stroke="#D4AF37" strokeWidth="1.25" />
-                  <path d="M16.25 16.25L13.13 13.13" stroke="#D4AF37" strokeWidth="1.25" strokeLinecap="round" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                className="sr-input sr-input-field"
-                placeholder="Where do you want to go?"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </div>
-
-            {/* Check-in */}
-            <div className="sr-input-wrap">
-              <div className="sr-input-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="1.88" y="3.13" width="16.25" height="15" rx="1.25" stroke="#D4AF37" strokeWidth="1.25" />
-                  <rect x="5" y="1.88" width="10" height="1.25" stroke="#D4AF37" strokeWidth="1.25" />
-                  <circle cx="10.63" cy="8.13" r="1.88" fill="#D4AF37" />
-                  <circle cx="13.75" cy="8.13" r="1.88" fill="#D4AF37" />
-                  <circle cx="10.63" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="13.75" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="4.38" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="7.50" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="4.38" cy="14.38" r="1.88" fill="#D4AF37" />
-                  <circle cx="7.50" cy="14.38" r="1.88" fill="#D4AF37" />
-                  <circle cx="10.63" cy="14.38" r="1.88" fill="#D4AF37" />
-                </svg>
-              </div>
-              <input
-                type="date"
-                className="sr-input sr-input-field sr-date-input"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-              />
-            </div>
-
-            {/* Check-out */}
-            <div className="sr-input-wrap">
-              <div className="sr-input-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="1.88" y="3.13" width="16.25" height="15" rx="1.25" stroke="#D4AF37" strokeWidth="1.25" />
-                  <rect x="5" y="1.88" width="10" height="1.25" stroke="#D4AF37" strokeWidth="1.25" />
-                  <circle cx="10.63" cy="8.13" r="1.88" fill="#D4AF37" />
-                  <circle cx="13.75" cy="8.13" r="1.88" fill="#D4AF37" />
-                  <circle cx="10.63" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="13.75" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="4.38" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="7.50" cy="11.25" r="1.88" fill="#D4AF37" />
-                  <circle cx="4.38" cy="14.38" r="1.88" fill="#D4AF37" />
-                  <circle cx="7.50" cy="14.38" r="1.88" fill="#D4AF37" />
-                  <circle cx="10.63" cy="14.38" r="1.88" fill="#D4AF37" />
-                </svg>
-              </div>
-              <input
-                type="date"
-                className="sr-input sr-input-field sr-date-input"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-              />
-            </div>
-
-            {/* Guests · Rooms */}
-            <div className="sr-input-wrap">
-              <div className="sr-input-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="6.55" cy="6.13" r="3.75" stroke="#D4AF37" strokeWidth="1.25" />
-                  <rect x="2.50" y="11.88" width="15" height="6.25" rx="2" stroke="#D4AF37" strokeWidth="1.25" />
-                </svg>
-              </div>
-              <div className="sr-guest-row">
-                <select
-                  className="sr-input sr-input-field sr-select"
-                  value={guests}
-                  onChange={(e) => setGuests(Number(e.target.value))}
-                >
-                  {[1,2,3,4,5,6,7,8].map(n => (
-                    <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>
-                  ))}
-                </select>
-                <span className="sr-guest-sep">·</span>
-                <select
-                  className="sr-input sr-input-field sr-select"
-                  value={rooms}
-                  onChange={(e) => setRooms(Number(e.target.value))}
-                >
-                  {[1,2,3,4,5].map(n => (
-                    <option key={n} value={n}>{n} Room{n > 1 ? 's' : ''}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Price Range */}
-            <div className="sr-price-section">
-              <div className="sr-price-header">
-                <span className="sr-section-label">Price Range</span>
-                <span className="sr-price-value">$0 - $5000+</span>
-              </div>
-              <div className="sr-slider-track">
-                <div className="sr-slider-fill" />
-              </div>
-            </div>
-
-            {/* Hotel Rating */}
-            <div className="sr-rating-section">
-              <span className="sr-section-label">Hotel Rating</span>
-              <div className="sr-rating-chips">
-                {[1, 2, 3, 4, 5].map(n => (
-                  <button
-                    key={n}
-                    className={`sr-rating-chip ${selectedRating === n ? 'active' : ''}`}
-                    onClick={() => setSelectedRating(selectedRating === n ? null : n)}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="#D4AF37">
-                      <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z" />
-                    </svg>
-                    <span>{n}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Travel Purpose */}
-            <div className="sr-purpose-section">
-              <span className="sr-section-label">Travel Purpose</span>
-              <div className="sr-chips-grid">
-                {travelPurposes.map(p => (
-                  <button
-                    key={p}
-                    className={`sr-chip ${selectedPurpose === p ? 'active' : ''}`}
-                    onClick={() => setSelectedPurpose(p === selectedPurpose ? null : p)}
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Event Filters */}
-            <div className="sr-event-section">
-              <span className="sr-section-label">Event Filters</span>
-              <div className="sr-chips-grid">
-                {eventFilters.map(e => (
-                  <button
-                    key={e}
-                    className={`sr-chip ${selectedEvent === e ? 'active' : ''}`}
-                    onClick={() => setSelectedEvent(e === selectedEvent ? null : e)}
-                  >
-                    {e}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Search Button */}
-            <button className="sr-search-btn" onClick={handleSidebarSearch}>
-              <div className="sr-search-btn-text">Search Luxury Stays</div>
-            </button>
-          </div>
+          <FilterPanel onFilter={handleFilter} initialFilters={initialFilters} />
         </aside>
 
         {/* ===== RESULTS ===== */}
         <main className="sr-main">
           <div className="sr-main-header">
             <div>
-              <h1 className="sr-main-title">Curated Luxury Hotels</h1>
-              <p className="sr-main-subtitle">09 premium properties match your preferences</p>
+              <span className="sr-eyebrow">SEARCH RESULTS</span>
+              <h1 className="sr-main-title">{title}</h1>
+              <p className="sr-main-subtitle">
+                {loading ? 'Searching hotels...' : (
+                  <>
+                    <strong>{sortedHotels.length}</strong> premium {sortedHotels.length === 1 ? 'property' : 'properties'} match your preferences
+                    {metaParts.length > 0 && <span className="sr-meta-sep">·</span>}
+                    {metaParts.join(' · ')}
+                  </>
+                )}
+              </p>
             </div>
-            <div className="sr-sort-btn">
-              <span>Sort by: Filtered</span>
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="#1A2B49" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
+            <div className="sr-header-controls">
+              <div className="sr-view-toggle" role="group" aria-label="View mode">
+                <button
+                  className={`sr-view-toggle-btn ${viewMode === 'grid' ? 'sr-view-toggle-btn-active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                  aria-label="Grid view"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                    <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                    <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                    <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+                  </svg>
+                </button>
+                <button
+                  className={`sr-view-toggle-btn ${viewMode === 'list' ? 'sr-view-toggle-btn-active' : ''}`}
+                  onClick={() => setViewMode('list')}
+                  aria-label="List view"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="1" y="2" width="6" height="3" rx="1" fill="currentColor" />
+                    <rect x="9" y="2" width="6" height="3" rx="1" fill="currentColor" />
+                    <rect x="1" y="6.5" width="6" height="3" rx="1" fill="currentColor" />
+                    <rect x="9" y="6.5" width="6" height="3" rx="1" fill="currentColor" />
+                    <rect x="1" y="11" width="6" height="3" rx="1" fill="currentColor" />
+                    <rect x="9" y="11" width="6" height="3" rx="1" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
+              <div className="sr-sort-wrap">
+                <select className="sr-sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                  <option value="recommended">Sort by: Recommended</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  <option value="rating_desc">Rating: High to Low</option>
+                  <option value="name">Name: A to Z</option>
+                </select>
+                <svg className="sr-sort-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#1A2B49" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                className="sr-search-input"
+                placeholder="Search hotels..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') setSearchApplied(searchText.trim()); }}
+              />
+              <button className="sr-search-submit" onClick={() => setSearchApplied(searchText.trim())}>Search</button>
             </div>
           </div>
-          <div className="sr-hotels-grid">
-            {displayHotels.map(hotel => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
-          </div>
+
+          {/* ===== SEARCH CRITERIA ===== */}
+          {!loading && totalChips > 0 && (
+            <div className="sr-criteria-bar">
+              <span className="sr-criteria-label">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 3.5h12M4 8h8M6 12.5h4" stroke="#155DFC" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                Your search
+              </span>
+              <div className="sr-criteria-chips">
+                {criteriaChips.map((c) => (
+                  <button
+                    key={c.key}
+                    className="sr-criteria-chip"
+                    onClick={() => c.range
+                      ? updateParams((p) => { p.delete('check_in'); p.delete('check_out'); })
+                      : removeParam(c.key)}
+                    title="Remove"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 1.33c-3.68 0-6.67 2.99-6.67 6.67s2.99 6.67 6.67 6.67 6.67-2.99 6.67-6.67S11.68 1.33 8 1.33z" fill="currentColor" />
+                      <path d="M6 6l4 4M10 6l-4 4" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                    {c.label}
+                  </button>
+                ))}
+                {filterChips.map((c) => (
+                  <button key={c.key} className="sr-criteria-chip sr-criteria-chip-filter" onClick={() => removeFilterChip(c)} title="Remove">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 1.33c-3.68 0-6.67 2.99-6.67 6.67s2.99 6.67 6.67 6.67 6.67-2.99 6.67-6.67S11.68 1.33 8 1.33z" fill="currentColor" />
+                      <path d="M6 6l4 4M10 6l-4 4" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+              {filterChips.length > 0 && (
+                <button className="sr-criteria-clear" onClick={clearAll}>Clear all filters</button>
+              )}
+            </div>
+          )}
+
+          {/* ===== RESULTS GRID ===== */}
+          {loading ? (
+            <div className={`sr-hotels-grid sr-skeleton-grid ${viewMode === 'list' ? 'sr-hotels-list' : ''}`}>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="sr-skeleton-card">
+                  <div className="sr-skeleton-img shimmer" />
+                  <div className="sr-skeleton-body">
+                    <div className="sr-skeleton-line w60 shimmer" />
+                    <div className="sr-skeleton-line w90 shimmer" />
+                    <div className="sr-skeleton-line w75 shimmer" />
+                    <div className="sr-skeleton-line w40 shimmer" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : sortedHotels.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#155DFC" strokeWidth="1.5" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M21 21l-4.35-4.35" />
+                  <path d="M8 11h6" />
+                </svg>
+              </div>
+              <h3>No hotels found</h3>
+              <p>Try adjusting your search filters or explore different destinations.</p>
+              <div className="empty-actions">
+                <button className="empty-clear-btn" onClick={clearAll}>Clear all filters</button>
+                <button className="empty-browse-btn" onClick={() => navigate('/home')}>Browse all hotels</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={`sr-hotels-grid ${viewMode === 'list' ? 'sr-hotels-list' : ''}`}>
+                {sortedHotels.map(hotel => (
+                  <SearchHotelCard key={hotel.id} hotel={hotel} />
+                ))}
+              </div>
+              <div className="sr-results-count">
+                Showing <strong>{sortedHotels.length}</strong> of {displayHotels.length} properties
+              </div>
+            </>
+          )}
         </main>
       </div>
     </div>

@@ -1,0 +1,544 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap');
+
+.mbd-page {
+  padding-top: 104px;
+  font-family: 'Inter', sans-serif;
+  background: #F7F9FC;
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+
+.mbd-content {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ===== BACK LINK ===== */
+.mbd-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2563EB;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  padding: 0;
+  margin-bottom: 28px;
+  transition: color 0.2s;
+}
+
+.mbd-back-btn:hover {
+  color: #F5A624;
+}
+
+/* ===== HEADER ===== */
+.mbd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+  animation: mbdFadeUp 0.6s ease both;
+}
+
+@keyframes mbdFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mbd-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #E8900B;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.mbd-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #F5A624, #E8900B);
+}
+
+.mbd-header-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #0A1B33;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.mbd-header-id {
+  color: #6B7280;
+  font-size: 0.9rem;
+  margin: 6px 0 0;
+}
+
+.mbd-status-badge {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(10, 27, 51, 0.06);
+}
+
+.mbd-status-confirmed {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.mbd-status-pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.mbd-status-cancelled {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+/* ===== CANCEL ACTION ===== */
+.mbd-cancel-action {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 24px;
+}
+
+.mbd-btn {
+  padding: 13px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.mbd-btn-danger {
+  background: linear-gradient(135deg, #F87171, #DC2626, #B91C1C);
+  color: #fff;
+}
+
+.mbd-btn-danger:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+  transform: translateY(-1px);
+}
+
+.mbd-btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mbd-cancel-error {
+  color: #DC2626;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: right;
+  margin: 0 0 12px;
+}
+
+.mbd-cancel-success {
+  color: #059669;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0 0 24px;
+}
+
+/* ===== CARDS ===== */
+.mbd-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.mbd-card {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(10, 27, 51, 0.06);
+  box-shadow: 0 4px 20px rgba(10, 27, 51, 0.06);
+  padding: 28px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: mbdFadeUp 0.6s ease both;
+}
+
+.mbd-card:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.mbd-card:hover {
+  box-shadow: 0 14px 40px rgba(10, 27, 51, 0.1);
+}
+
+.mbd-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mbd-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mbd-card-title {
+  font-family: 'Montserrat', sans-serif;
+  color: #0A1B33;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.mbd-hotel-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 20px rgba(10, 27, 51, 0.14);
+}
+
+/* ===== INFO ROWS ===== */
+.mbd-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 0;
+}
+
+.mbd-info-row-double {
+  display: flex;
+  gap: 16px;
+  padding: 7px 0;
+}
+
+.mbd-info-row-double > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mbd-info-label {
+  color: #E8900B;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mbd-info-value {
+  color: #0A1B33;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mbd-divider {
+  border: none;
+  border-bottom: 1px solid rgba(10, 27, 51, 0.08);
+  margin: 14px 0;
+}
+
+.mbd-stay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  background: rgba(245, 166, 36, 0.1);
+  border: 1px solid rgba(245, 166, 36, 0.25);
+  border-radius: 100px;
+  padding: 7px 16px;
+}
+
+.mbd-stay-days {
+  color: #0A1B33;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.mbd-stay-sep {
+  color: #F5A624;
+}
+
+.mbd-stay-rate {
+  color: #6B7280;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.mbd-price {
+  color: #0A1B33;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.mbd-requests-text {
+  color: #4B5563;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== REVIEW FORM ===== */
+.mbd-review-heading {
+  font-family: 'Montserrat', sans-serif;
+  color: #0A1B33;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.mbd-review-hint {
+  color: #6B7280;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background: #F8FAFC;
+  border: 1px solid rgba(10, 27, 51, 0.08);
+  border-left: 3px solid #F5A624;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 0;
+}
+
+.mbd-review-exists {
+  color: #2563EB;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: #EFF6FF;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 0 0 14px;
+}
+
+.mbd-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mbd-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mbd-form-label {
+  color: #1A2B49;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.mbd-input,
+.mbd-textarea {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #1A2B49;
+  border: 1.5px solid rgba(10, 27, 51, 0.12);
+  border-radius: 12px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mbd-input:focus,
+.mbd-textarea:focus {
+  border-color: #F5A624;
+  box-shadow: 0 0 0 3px rgba(245, 166, 36, 0.15);
+}
+
+.mbd-input::placeholder,
+.mbd-textarea::placeholder {
+  color: #9CA3AF;
+}
+
+.mbd-textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.mbd-form-error {
+  color: #DC2626;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.mbd-form-success {
+  color: #059669;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mbd-submit-btn {
+  padding: 13px 28px;
+  background: linear-gradient(135deg, #FFD166, #F5A624, #E8900B);
+  color: #0A1B33;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  align-self: flex-start;
+}
+
+.mbd-submit-btn:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(245, 166, 36, 0.4);
+  transform: translateY(-1px);
+}
+
+.mbd-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== REVIEWS LIST ===== */
+.mbd-no-reviews {
+  color: #6B7280;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.mbd-reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: #F7F9FC;
+  border-radius: 12px;
+}
+
+.mbd-reviews-avg {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #0A1B33;
+}
+
+.mbd-reviews-stars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mbd-reviews-count {
+  color: #6B7280;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.mbd-review-item {
+  border-top: 1px solid rgba(10, 27, 51, 0.08);
+  padding: 18px 0;
+}
+
+.mbd-review-item:last-child {
+  padding-bottom: 0;
+}
+
+.mbd-review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mbd-review-avatar {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+.mbd-review-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mbd-review-name {
+  color: #0A1B33;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.mbd-review-date {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.mbd-review-title {
+  color: #0A1B33;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 10px 0 4px;
+}
+
+.mbd-review-comment {
+  color: #4B5563;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.mbd-empty {
+  text-align: center;
+  color: #6B7280;
+  padding: 48px 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .mbd-columns {
+    flex-direction: column;
+  }
+
+  .mbd-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mbd-content {
+    padding: 0 20px;
+  }
+}

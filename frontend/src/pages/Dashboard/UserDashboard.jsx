@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { bookingsAPI } from '../../utils/api';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserBookings } from '../../hooks/useBookings';
 import { useAuth } from '../../context/AuthContext';
+import { formatLKRFixed } from '../../utils/currency';
 import './Dashboard.css';
 
 function StatusBadge({ status }) {
@@ -15,25 +16,8 @@ function StatusBadge({ status }) {
 
 export default function UserDashboard() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchBookings = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const res = await bookingsAPI.listUser();
-        setBookings(res.data.bookings || res.data || []);
-      } catch (err) {
-        setError('Failed to load bookings.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
-  }, []);
+  const navigate = useNavigate();
+  const { data: bookings = [], isLoading: loading, error } = useUserBookings();
 
   return (
     <div className="dashboard-page">
@@ -84,12 +68,16 @@ export default function UserDashboard() {
               </thead>
               <tbody>
                 {bookings.map((b) => (
-                  <tr key={b.id}>
+                  <tr
+                    key={b.id}
+                    className="dashboard-row-link"
+                    onClick={() => navigate(`/my-booking/${b.booking_code}`)}
+                  >
                     <td data-label="Hotel">{b.hotel_name || b.hotel?.name}</td>
                     <td data-label="Room">{b.room_type || b.room?.room_type}</td>
                     <td data-label="Check-in">{b.check_in}</td>
                     <td data-label="Check-out">{b.check_out}</td>
-                    <td data-label="Total">${b.total_price || b.total}</td>
+                    <td data-label="Total">{formatLKRFixed(b.total_price || b.total)}</td>
                     <td data-label="Status"><StatusBadge status={b.status} /></td>
                     <td data-label="Booked On">{b.created_at || b.booking_date}</td>
                   </tr>

@@ -1,5 +1,26 @@
 .register-card-layout {
   flex-direction: row-reverse;
+  min-height: 560px;
+}
+
+.register-card-layout .auth-form {
+  gap: 0.95rem;
+}
+
+.register-card-layout .auth-input-group {
+  gap: 0.15rem;
+}
+
+.register-card-layout .auth-input {
+  height: 48px;
+}
+
+.register-card-layout .auth-subtitle {
+  margin-bottom: 1.25rem;
+}
+
+.register-card-layout .auth-footer-text {
+  margin-top: 1.25rem;
 }
 
 @media (max-width: 768px) {

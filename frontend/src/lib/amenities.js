@@ -1,0 +1,18 @@
+export const AMENITIES = [
+  'Free Wi-Fi',
+  'Swimming Pool',
+  'Spa & Wellness',
+  'Gym & Fitness Center',
+  'Conference Room',
+  'Family Friendly',
+  'Restaurant',
+  'Room Service',
+  'Free Parking',
+  'Airport Shuttle',
+  'Air Conditioning',
+  'Breakfast Included',
+  'Bar & Lounge',
+  'Pet Friendly',
+  'Beach Access',
+  '24/7 Front Desk',
+];
