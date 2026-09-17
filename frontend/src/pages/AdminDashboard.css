@@ -525,6 +525,9 @@
 .ad-modal-hotel {
   width: 670px;
   max-width: 90vw;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .ad-hotel-modal-img-wrap {
@@ -597,6 +600,9 @@
 
 .ad-hotel-modal-body {
   padding: 24px;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 .ad-hotel-modal-rating-row {
