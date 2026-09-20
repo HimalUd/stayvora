@@ -12,7 +12,7 @@ import {
   useDeleteReview,
   useDeleteUser,
 } from '../hooks/useAdmin';
-import logoLight from '../assets/logos/logo-light.png';
+import logoDark from '../assets/logos/logo-dark.png';
 import { formatLKRFixed } from '../utils/currency';
 import './AdminDashboard.css';
 
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
       <aside className="ad-sidebar">
         <div className="ad-sidebar-header">
           <Link to="/" className="ad-logo-wrap">
-            <img src={logoLight} alt="StayVora" className="ad-logo-img" />
+            <img src={logoDark} alt="StayVora" className="ad-logo-img" />
             <div className="ad-logo-badge">Admin Console</div>
           </Link>
         </div>
@@ -200,14 +200,14 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('overview')}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="2" y="2" width="4.67" height="6" rx="0.67" stroke={activeTab === 'overview' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <rect x="9.33" y="2" width="4.67" height="3.33" rx="0.67" stroke={activeTab === 'overview' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <rect x="9.33" y="8" width="4.67" height="6" rx="0.67" stroke={activeTab === 'overview' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <rect x="2" y="10.67" width="4.67" height="3.33" rx="0.67" stroke={activeTab === 'overview' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
+              <rect x="2" y="2" width="4.67" height="6" rx="0.67" stroke={activeTab === 'overview' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <rect x="9.33" y="2" width="4.67" height="3.33" rx="0.67" stroke={activeTab === 'overview' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <rect x="9.33" y="8" width="4.67" height="6" rx="0.67" stroke={activeTab === 'overview' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <rect x="2" y="10.67" width="4.67" height="3.33" rx="0.67" stroke={activeTab === 'overview' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
             </svg>
             <span>Overview</span>
             <svg className="ad-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#020618" strokeWidth="1.17"/>
+              <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#FFFFFF" strokeWidth="1.17"/>
             </svg>
           </div>
           <div
@@ -215,9 +215,9 @@ export default function AdminDashboard() {
             onClick={() => { setActiveTab('hotels'); setHotelRatingFilter('all'); }}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="4" y="1.33" width="8" height="13.33" rx="1.33" stroke={activeTab === 'hotels' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <rect x="1.33" y="8" width="2.67" height="6.67" rx="1.33" stroke={activeTab === 'hotels' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <rect x="12" y="6" width="2.67" height="8.67" rx="1.33" stroke={activeTab === 'hotels' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
+              <rect x="4" y="1.33" width="8" height="13.33" rx="1.33" stroke={activeTab === 'hotels' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <rect x="1.33" y="8" width="2.67" height="6.67" rx="1.33" stroke={activeTab === 'hotels' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <rect x="12" y="6" width="2.67" height="8.67" rx="1.33" stroke={activeTab === 'hotels' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
             </svg>
             <span>Hotels</span>
           </div>
@@ -226,12 +226,12 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('reviews')}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke={activeTab === 'reviews' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
+              <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke={activeTab === 'reviews' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
             </svg>
             <span>Reviews</span>
             {activeTab === 'reviews' && (
               <svg className="ad-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#020618" strokeWidth="1.17"/>
+                <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#FFFFFF" strokeWidth="1.17"/>
               </svg>
             )}
           </div>
@@ -240,15 +240,15 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('users')}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="5.5" cy="5.5" r="2.83" stroke={activeTab === 'users' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <circle cx="12.5" cy="5.5" r="1.83" stroke={activeTab === 'users' ? '#020618' : '#90A1B9'} strokeWidth="1.33"/>
-              <path d="M1.33 13.33C1.33 10.39 3.06 8.33 5.5 8.33C7.94 8.33 9.67 10.39 9.67 13.33" stroke={activeTab === 'users' ? '#020618' : '#90A1B9'} strokeWidth="1.33" strokeLinecap="round"/>
-              <path d="M10.33 8.67C12.5 9 14 10.72 14 13.33" stroke={activeTab === 'users' ? '#020618' : '#90A1B9'} strokeWidth="1.33" strokeLinecap="round"/>
+              <circle cx="5.5" cy="5.5" r="2.83" stroke={activeTab === 'users' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <circle cx="12.5" cy="5.5" r="1.83" stroke={activeTab === 'users' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33"/>
+              <path d="M1.33 13.33C1.33 10.39 3.06 8.33 5.5 8.33C7.94 8.33 9.67 10.39 9.67 13.33" stroke={activeTab === 'users' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33" strokeLinecap="round"/>
+              <path d="M10.33 8.67C12.5 9 14 10.72 14 13.33" stroke={activeTab === 'users' ? '#FFFFFF' : '#64748B'} strokeWidth="1.33" strokeLinecap="round"/>
             </svg>
             <span>Users</span>
             {activeTab === 'users' && (
               <svg className="ad-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#020618" strokeWidth="1.17"/>
+                <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#FFFFFF" strokeWidth="1.17"/>
               </svg>
             )}
           </div>
@@ -264,8 +264,8 @@ export default function AdminDashboard() {
           </div>
           <div className="ad-signout" onClick={handleSignOut}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <rect x="2" y="2" width="4" height="12" rx="0.67" stroke="#90A1B9" strokeWidth="1.33"/>
-              <rect x="10.67" y="4.67" width="3.33" height="6.67" rx="0.67" stroke="#90A1B9" strokeWidth="1.33"/>
+<rect x="2" y="2" width="4" height="12" rx="0.67" stroke="#64748B" strokeWidth="1.33"/>
+                      <rect x="10.67" y="4.67" width="3.33" height="6.67" rx="0.67" stroke="#64748B" strokeWidth="1.33"/>
             </svg>
             <span>Sign out</span>
           </div>
@@ -285,7 +285,7 @@ export default function AdminDashboard() {
               <button className="ad-overview-cta" onClick={() => setActiveTab('hotels')}>
                 <span>Manage Hotels</span>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#020618" strokeWidth="1.17"/>
+                  <rect x="5.25" y="3.50" width="7" height="3.50" rx="0.58" stroke="#FFFFFF" strokeWidth="1.17"/>
                 </svg>
               </button>
             </div>
@@ -293,11 +293,11 @@ export default function AdminDashboard() {
             {/* STAT CARDS */}
             <div className="ad-stats">
               <div className="ad-stat-card ad-stat-hover" onClick={() => setActiveTab('hotels')}>
-                <div className="ad-stat-icon" style={{ background: 'rgba(81, 162, 255, 0.10)' }}>
+                <div className="ad-stat-icon" style={{ background: 'rgba(37, 99, 235, 0.10)' }}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <rect x="5" y="1.67" width="10" height="16.67" rx="1.67" stroke="#51A2FF" strokeWidth="1.67"/>
-                    <rect x="1.67" y="10" width="3.33" height="8.33" rx="1.67" stroke="#51A2FF" strokeWidth="1.67"/>
-                    <rect x="15" y="7.50" width="3.33" height="10.83" rx="1.67" stroke="#51A2FF" strokeWidth="1.67"/>
+                    <rect x="5" y="1.67" width="10" height="16.67" rx="1.67" stroke="#2563EB" strokeWidth="1.67"/>
+                    <rect x="1.67" y="10" width="3.33" height="8.33" rx="1.67" stroke="#2563EB" strokeWidth="1.67"/>
+                    <rect x="15" y="7.50" width="3.33" height="10.83" rx="1.67" stroke="#2563EB" strokeWidth="1.67"/>
                   </svg>
                 </div>
                 <div className="ad-stat-number">{statsView.totalHotels}</div>
@@ -305,10 +305,10 @@ export default function AdminDashboard() {
                 <div className="ad-stat-sub">{statsView.totalHotels} owner-registered · click to view</div>
               </div>
               <div className="ad-stat-card">
-                <div className="ad-stat-icon" style={{ background: 'rgba(0, 212, 146, 0.10)' }}>
+                <div className="ad-stat-icon" style={{ background: 'rgba(16, 185, 129, 0.12)' }}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <rect x="1.67" y="5.83" width="16.67" height="8.33" rx="1.67" stroke="#00D492" strokeWidth="1.67"/>
-                    <rect x="13.33" y="5.83" width="5" height="5" rx="1.67" stroke="#00D492" strokeWidth="1.67"/>
+                    <rect x="1.67" y="5.83" width="16.67" height="8.33" rx="1.67" stroke="#10B981" strokeWidth="1.67"/>
+                    <rect x="13.33" y="5.83" width="5" height="5" rx="1.67" stroke="#10B981" strokeWidth="1.67"/>
                   </svg>
                 </div>
                 <div className="ad-stat-number">{statsView.totalBookings}</div>
@@ -316,9 +316,9 @@ export default function AdminDashboard() {
                 <div className="ad-stat-sub">all bookings in the system</div>
               </div>
               <div className="ad-stat-card ad-stat-hover" onClick={() => setActiveTab('reviews')}>
-                <div className="ad-stat-icon" style={{ background: 'rgba(255, 185, 0, 0.10)' }}>
+                <div className="ad-stat-icon" style={{ background: 'rgba(245, 166, 35, 0.14)' }}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <rect x="1.67" y="1.67" width="16.67" height="15.89" rx="1.67" stroke="#FFB900" strokeWidth="1.67"/>
+                    <rect x="1.67" y="1.67" width="16.67" height="15.89" rx="1.67" stroke="#F5A623" strokeWidth="1.67"/>
                   </svg>
                 </div>
                 <div className="ad-stat-number">{statsView.totalReviews}</div>
@@ -326,12 +326,12 @@ export default function AdminDashboard() {
                 <div className="ad-stat-sub">across all properties · click to view</div>
               </div>
               <div className="ad-stat-card ad-stat-hover" onClick={() => setActiveTab('users')}>
-                <div className="ad-stat-icon" style={{ background: 'rgba(81, 162, 255, 0.10)' }}>
+                <div className="ad-stat-icon" style={{ background: 'rgba(37, 99, 235, 0.10)' }}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <circle cx="7" cy="7" r="3.33" stroke="#51A2FF" strokeWidth="1.67"/>
-                    <circle cx="15" cy="7" r="2.17" stroke="#51A2FF" strokeWidth="1.67"/>
-                    <path d="M1.67 16.67C1.67 12.72 3.83 10 7 10C10.17 10 12.33 12.72 12.33 16.67" stroke="#51A2FF" strokeWidth="1.67" strokeLinecap="round"/>
-                    <path d="M13.33 10.83C15.83 11.17 17.5 13.33 17.5 16.67" stroke="#51A2FF" strokeWidth="1.67" strokeLinecap="round"/>
+                    <circle cx="7" cy="7" r="3.33" stroke="#2563EB" strokeWidth="1.67"/>
+                    <circle cx="15" cy="7" r="2.17" stroke="#2563EB" strokeWidth="1.67"/>
+                    <path d="M1.67 16.67C1.67 12.72 3.83 10 7 10C10.17 10 12.33 12.72 12.33 16.67" stroke="#2563EB" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M13.33 10.83C15.83 11.17 17.5 13.33 17.5 16.67" stroke="#2563EB" strokeWidth="1.67" strokeLinecap="round"/>
                   </svg>
                 </div>
                 <div className="ad-stat-number">{statsView.totalUsers}</div>
@@ -342,9 +342,9 @@ export default function AdminDashboard() {
                 className="ad-stat-card ad-stat-hover"
                 onClick={() => { setHotelRatingFilter('low'); setActiveTab('hotels'); }}
               >
-                <div className="ad-stat-icon" style={{ background: 'rgba(255, 100, 103, 0.10)' }}>
+                <div className="ad-stat-icon" style={{ background: 'rgba(239, 68, 68, 0.12)' }}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <rect x="3.33" y="1.67" width="13.33" height="16.67" rx="1.67" stroke="#FF6467" strokeWidth="1.67"/>
+                    <rect x="3.33" y="1.67" width="13.33" height="16.67" rx="1.67" stroke="#EF4444" strokeWidth="1.67"/>
                   </svg>
                 </div>
                 <div className="ad-stat-number">{statsView.flagged}</div>
@@ -360,7 +360,7 @@ export default function AdminDashboard() {
                 <div className="ad-panel-header">
                   <div className="ad-panel-title">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="1.32" y="1.99" width="13.34" height="12.01" rx="1.33" stroke="#FFB900" strokeWidth="1.33"/>
+                      <rect x="1.32" y="1.99" width="13.34" height="12.01" rx="1.33" stroke="#F5A623" strokeWidth="1.33"/>
                     </svg>
                     Hotels Needing Attention
                   </div>
@@ -370,7 +370,7 @@ export default function AdminDashboard() {
                   >
                     <span>Manage </span>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <rect x="6" y="2.50" width="7" height="3.50" rx="0.50" stroke="#FFB900" strokeWidth="1"/>
+                      <rect x="6" y="2.50" width="7" height="3.50" rx="0.50" stroke="#F5A623" strokeWidth="1"/>
                     </svg>
                   </div>
                 </div>
@@ -380,14 +380,14 @@ export default function AdminDashboard() {
                     <div className="ad-hotel-list">
                       {flagged.map((h, i) => (
                         <div key={h.id} className="ad-hotel-row" style={{ cursor: 'pointer' }} onClick={() => { setSelectedHotel(h); }}>
-                          <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: '#314158' }}>
+                          <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: 'linear-gradient(135deg, #2563EB, #9810FA)' }}>
                             {(h.name || 'H')[0]}
                           </div>
                           <div className="ad-hotel-info">
                             <div className="ad-hotel-name">{h.name}</div>
                             <div className="ad-hotel-location">{h.city || h.location || 'N/A'}</div>
                           </div>
-                          <div className="ad-rating-badge" style={{ color: '#FF6467', background: 'rgba(255, 100, 103, 0.10)' }}>
+                          <div className="ad-rating-badge" style={{ color: '#EF4444', background: 'rgba(239, 68, 68, 0.12)' }}>
                             {h.rating || 'N/A'}
                           </div>
                         </div>
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
                 <div className="ad-panel-header">
                   <div className="ad-panel-title">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke="#FFB900" strokeWidth="1.33"/>
+                      <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke="#F5A623" strokeWidth="1.33"/>
                     </svg>
                     Recent Bookings
                   </div>
@@ -444,7 +444,7 @@ export default function AdminDashboard() {
                           if (h) setSelectedHotel(h);
                         }}
                       >
-                        <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: '#314158' }}>
+                        <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: 'linear-gradient(135deg, #2563EB, #9810FA)' }}>
                           {(b.hotel_name || 'H')[0]}
                         </div>
                         <div className="ad-hotel-info">
@@ -479,15 +479,15 @@ export default function AdminDashboard() {
                 <div className="ad-panel-header">
                   <div className="ad-panel-title">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="1.33" y="1.33" width="13.33" height="13.33" rx="1.33" stroke="#FFB900" strokeWidth="1.33"/>
-                      <rect x="7.33" y="1.33" width="1.33" height="13.33" rx="0.67" fill="#FFB900"/>
+                      <rect x="1.33" y="1.33" width="13.33" height="13.33" rx="1.33" stroke="#F5A623" strokeWidth="1.33"/>
+                      <rect x="7.33" y="1.33" width="1.33" height="13.33" rx="0.67" fill="#F5A623"/>
                     </svg>
                     Top Rated Hotels
                   </div>
                   <div className="ad-panel-manage" onClick={() => setActiveTab('hotels')}>
                     <span>View all </span>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <rect x="6" y="2.50" width="7" height="3.50" rx="0.50" stroke="#FFB900" strokeWidth="1"/>
+                      <rect x="6" y="2.50" width="7" height="3.50" rx="0.50" stroke="#F5A623" strokeWidth="1"/>
                     </svg>
                   </div>
                 </div>
@@ -501,14 +501,14 @@ export default function AdminDashboard() {
                         onClick={() => setSelectedHotel(h)}
                       >
                         <div className="ad-rank">{i + 1}</div>
-                        <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: '#314158' }}>
+                        <div className="ad-user-avatar" style={{ width: 36, height: 36, fontSize: 12, borderRadius: 10, background: 'linear-gradient(135deg, #2563EB, #9810FA)' }}>
                           {(h.name || 'H')[0]}
                         </div>
                         <div className="ad-hotel-info">
                           <div className="ad-hotel-name">{h.name}</div>
                           <div className="ad-hotel-location">{h.city || h.location || 'N/A'}</div>
                         </div>
-                        <div className="ad-rating-badge" style={{ color: '#FFB900', background: 'rgba(255, 185, 0, 0.10)' }}>
+                        <div className="ad-rating-badge" style={{ color: '#F5A623', background: 'rgba(245, 166, 35, 0.14)' }}>
                           {h.rating}
                         </div>
                       </div>
@@ -546,8 +546,8 @@ export default function AdminDashboard() {
                   style={{ paddingTop: 8, cursor: 'pointer' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <rect x="2.33" y="2.33" width="11.67" height="1.17" rx="0.58" fill="#FFB900" transform="rotate(45 2.33 2.33)"/>
-                    <rect x="2.33" y="11.67" width="11.67" height="1.17" rx="0.58" fill="#FFB900" transform="rotate(-45 2.33 11.67)"/>
+                    <rect x="2.33" y="2.33" width="11.67" height="1.17" rx="0.58" fill="#F5A623" transform="rotate(45 2.33 2.33)"/>
+                    <rect x="2.33" y="11.67" width="11.67" height="1.17" rx="0.58" fill="#F5A623" transform="rotate(-45 2.33 11.67)"/>
                   </svg>
                   <span>Show all hotels</span>
                 </div>
@@ -600,7 +600,7 @@ export default function AdminDashboard() {
                       )}
                     </div>
                     <div style={{ paddingTop: 16 }}>
-                      <div className="ad-hotel-name" style={{ fontSize: 16, fontWeight: 600, color: '#fff' }}>
+                      <div className="ad-hotel-name" style={{ fontSize: 16, fontWeight: 600, color: '#1A2B49' }}>
                         {h.name}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingTop: 4 }}>
@@ -618,7 +618,7 @@ export default function AdminDashboard() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingTop: 12 }}>
                         <div
                           className="ad-rating-badge"
-                          style={Number(h.rating || 0) < 3 && h.rating ? { color: '#FF6467', background: 'rgba(255, 100, 103, 0.10)' } : undefined}
+                          style={Number(h.rating || 0) < 3 && h.rating ? { color: '#EF4444', background: 'rgba(239, 68, 68, 0.12)' } : undefined}
                         >
                           {h.rating || 'N/A'}
                         </div>
@@ -673,8 +673,8 @@ export default function AdminDashboard() {
                         {[1, 2, 3, 4, 5].map(s => (
                           <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill="none">
                             <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17"
-                              fill={s <= Math.round(Number(reviewStats.avg)) ? '#FFB900' : 'none'}
-                              stroke="#FFB900" strokeWidth="1.17" />
+                              fill={s <= Math.round(Number(reviewStats.avg)) ? '#F5A623' : 'none'}
+                              stroke="#F5A623" strokeWidth="1.17" />
                           </svg>
                         ))}
                       </div>
@@ -689,7 +689,7 @@ export default function AdminDashboard() {
                             <div className="ad-rev-bar-track">
                               <div
                                 className="ad-rev-bar-fill"
-                                style={{ width: `${d.pct}%`, background: s >= 4 ? '#00D492' : s === 3 ? '#FFB900' : '#FF6467' }}
+                                style={{ width: `${d.pct}%`, background: s >= 4 ? '#10B981' : s === 3 ? '#F5A623' : '#EF4444' }}
                               />
                             </div>
                             <span className="ad-rev-bar-count">{d.count}</span>
@@ -750,8 +750,8 @@ export default function AdminDashboard() {
                   >
                     <span className="ad-rev-badge-low" style={{ padding: '2px 8px' }}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <rect x="2.67" y="1.33" width="6.67" height="8.33" rx="1" stroke="#FF6467" strokeWidth="1.1"/>
-                        <rect x="5" y="1.33" width="2" height="1.67" rx="0.5" fill="#FF6467"/>
+                        <rect x="2.67" y="1.33" width="6.67" height="8.33" rx="1" stroke="#EF4444" strokeWidth="1.1"/>
+                        <rect x="5" y="1.33" width="2" height="1.67" rx="0.5" fill="#EF4444"/>
                       </svg>
                       Low ratings (&lt;3)
                     </span>
@@ -787,8 +787,8 @@ export default function AdminDashboard() {
                                   {[1, 2, 3, 4, 5].map(s => (
                                     <svg key={s} width="12" height="12" viewBox="0 0 14 14" fill="none">
                                       <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17"
-                                        fill={s <= Math.round(Number(r.rating || 0)) ? '#FFB900' : 'none'}
-                                        stroke="#FFB900" strokeWidth="1.17" />
+                                        fill={s <= Math.round(Number(r.rating || 0)) ? '#F5A623' : 'none'}
+                                        stroke="#F5A623" strokeWidth="1.17" />
                                     </svg>
                                   ))}
                                 </div>
@@ -813,8 +813,8 @@ export default function AdminDashboard() {
                               {r.booking_id && (
                                 <span className="ad-rev-badge-verified" title="Review from a confirmed booking">
                                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                                    <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke="#00D492" strokeWidth="1.1"/>
-                                    <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke="#00D492" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke="#10B981" strokeWidth="1.1"/>
+                                    <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke="#10B981" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
                                   Verified stay
                                 </span>
@@ -822,8 +822,8 @@ export default function AdminDashboard() {
                               {(Number(r.rating) || 0) < 3 && (
                                 <span className="ad-rev-badge-low">
                                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                    <rect x="2.67" y="1.33" width="6.67" height="8.33" rx="1" stroke="#FF6467" strokeWidth="1.1"/>
-                                    <rect x="5" y="1.33" width="2" height="1.67" rx="0.5" fill="#FF6467"/>
+                                    <rect x="2.67" y="1.33" width="6.67" height="8.33" rx="1" stroke="#EF4444" strokeWidth="1.1"/>
+                                    <rect x="5" y="1.33" width="2" height="1.67" rx="0.5" fill="#EF4444"/>
                                   </svg>
                                   Low rating
                                 </span>
@@ -837,10 +837,10 @@ export default function AdminDashboard() {
                                 }}
                               >
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                  <path d="M2 3.5H12" stroke="#FF6467" strokeWidth="1.2" strokeLinecap="round"/>
-                                  <path d="M4.5 3.5V2.5C4.5 2.1 4.8 1.8 5.2 1.8H8.8C9.2 1.8 9.5 2.1 9.5 2.5V3.5" stroke="#FF6467" strokeWidth="1.2" strokeLinecap="round"/>
-                                  <path d="M5.5 6.5V10M8.5 6.5V10" stroke="#FF6467" strokeWidth="1.2" strokeLinecap="round"/>
-                                  <path d="M3 3.5L3.5 11.5C3.5 11.8 3.8 12 4.1 12H9.9C10.2 12 10.5 11.8 10.5 11.5L11 3.5" stroke="#FF6467" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M2 3.5H12" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M4.5 3.5V2.5C4.5 2.1 4.8 1.8 5.2 1.8H8.8C9.2 1.8 9.5 2.1 9.5 2.5V3.5" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M5.5 6.5V10M8.5 6.5V10" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round"/>
+                                  <path d="M3 3.5L3.5 11.5C3.5 11.8 3.8 12 4.1 12H9.9C10.2 12 10.5 11.8 10.5 11.5L11 3.5" stroke="#EF4444" strokeWidth="1.2" strokeLinecap="round"/>
                                 </svg>
                               </div>
                             </div>
@@ -925,7 +925,7 @@ export default function AdminDashboard() {
                     className="ad-user-row-card"
                     onClick={() => { setSelectedUser(u); userDetailMutation.reset(); userDetailMutation.mutate(u.id); }}
                   >
-                    <div className="ad-user-avatar" style={{ width: 40, height: 40, fontSize: 15, borderRadius: 12, background: '#314158' }}>
+                    <div className="ad-user-avatar" style={{ width: 40, height: 40, fontSize: 15, borderRadius: 12, background: 'linear-gradient(135deg, #2563EB, #9810FA)' }}>
                       {(u.name || 'U').charAt(0).toUpperCase()}
                     </div>
                     <div className="ad-user-info">
@@ -940,21 +940,21 @@ export default function AdminDashboard() {
                     <div className="ad-user-stats">
                       <span className="ad-user-stat-pill">
                         <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                          <rect x="1.33" y="5.83" width="13.33" height="6.67" rx="1.33" stroke="#51A2FF" strokeWidth="1.33"/>
-                          <rect x="11.33" y="5.83" width="4" height="4" rx="1.33" stroke="#51A2FF" strokeWidth="1.33"/>
+                          <rect x="1.33" y="5.83" width="13.33" height="6.67" rx="1.33" stroke="#2563EB" strokeWidth="1.33"/>
+                          <rect x="11.33" y="5.83" width="4" height="4" rx="1.33" stroke="#2563EB" strokeWidth="1.33"/>
                         </svg>
                         {u.bookings_count || 0} bookings
                       </span>
                       <span className="ad-user-stat-pill">
                         <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                          <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke="#FFB900" strokeWidth="1.33"/>
+                          <rect x="1.33" y="1.33" width="13.33" height="12.71" rx="1.33" stroke="#F5A623" strokeWidth="1.33"/>
                         </svg>
                         {u.reviews_count || 0} reviews
                       </span>
                     </div>
                     <div className="ad-user-row-chevron">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M5 3l4 4-4 4" stroke="#90A1B9" strokeWidth="1.33" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M5 3l4 4-4 4" stroke="#94A3B8" strokeWidth="1.33" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </div>
                   </div>
@@ -972,8 +972,8 @@ export default function AdminDashboard() {
                 <div className="ad-modal-title">Review Details</div>
                 <div className="ad-modal-close" onClick={() => setSelectedReview(null)}>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <rect x="4" y="4" width="12.80" height="1.60" rx="0.80" fill="#90A1B9" transform="rotate(45 4 4)"/>
-                    <rect x="4" y="12.80" width="12.80" height="1.60" rx="0.80" fill="#90A1B9" transform="rotate(-45 4 12.80)"/>
+                    <rect x="4" y="4" width="12.80" height="1.60" rx="0.80" fill="#94A3B8" transform="rotate(45 4 4)"/>
+                    <rect x="4" y="12.80" width="12.80" height="1.60" rx="0.80" fill="#94A3B8" transform="rotate(-45 4 12.80)"/>
                   </svg>
                 </div>
               </div>
@@ -989,16 +989,16 @@ export default function AdminDashboard() {
                   {[1, 2, 3, 4, 5].map(s => (
                     <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17"
-                        fill={s <= Math.round(Number(selectedReview.rating || 0)) ? '#FFB900' : 'none'}
-                        stroke="#FFB900" strokeWidth="1.17" />
+                        fill={s <= Math.round(Number(selectedReview.rating || 0)) ? '#F5A623' : 'none'}
+                        stroke="#F5A623" strokeWidth="1.17" />
                     </svg>
                   ))}
                   <span className="ad-modal-rating">{selectedReview.rating} / 5</span>
                   {selectedReview.booking_id && (
                     <span className="ad-rev-badge-verified" style={{ marginLeft: 8 }}>
                       <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                        <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke="#00D492" strokeWidth="1.1"/>
-                        <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke="#00D492" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+                        <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke="#10B981" strokeWidth="1.1"/>
+                        <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke="#10B981" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                       Verified stay
                     </span>
@@ -1006,7 +1006,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="ad-modal-hotel-badge">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17" stroke="#CAD5E2" strokeWidth="1.17"/>
+                    <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17" stroke="#94A3B8" strokeWidth="1.17"/>
                   </svg>
                   <span>{selectedReview.hotel_name}</span>
                 </div>
@@ -1039,10 +1039,10 @@ export default function AdminDashboard() {
               <div className="ad-modal-body" style={{ textAlign: 'center', paddingTop: 32 }}>
                 <div className="ad-delete-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 6H21" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M10 11V17M14 11V17" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M3 6H21" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M10 11V17M14 11V17" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
                 </div>
                 <div className="ad-modal-title" style={{ fontSize: 18, paddingTop: 16 }}>Remove Review</div>
@@ -1115,8 +1115,8 @@ export default function AdminDashboard() {
                   {[1,2,3,4,5].map(s => (
                     <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill="none">
                       <rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17"
-                        fill={s <= Math.round(Number(selectedHotel.rating || 0)) ? '#FFB900' : 'none'}
-                        stroke={'#FFB900'}
+                        fill={s <= Math.round(Number(selectedHotel.rating || 0)) ? '#F5A623' : 'none'}
+                        stroke={'#F5A623'}
                         strokeWidth="1.17"
                       />
                     </svg>
@@ -1161,8 +1161,8 @@ export default function AdminDashboard() {
                       {getAmenitiesList(selectedHotel).map((a, i) => (
                         <div key={i} className="ad-hotel-modal-amenity-pill">
                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <rect x="1" y="1" width="10" height="10" rx="1" stroke="#00D492" strokeWidth="1"/>
-                            <rect x="4.50" y="2" width="6.50" height="5" rx="1" stroke="#00D492" strokeWidth="1"/>
+                            <rect x="1" y="1" width="10" height="10" rx="1" stroke="#10B981" strokeWidth="1"/>
+                            <rect x="4.50" y="2" width="6.50" height="5" rx="1" stroke="#10B981" strokeWidth="1"/>
                           </svg>
                           <span>{a}</span>
                         </div>
@@ -1196,8 +1196,8 @@ export default function AdminDashboard() {
                     onClick={() => handleRemoveHotel(selectedHotel.id)}
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="3.33" y="4" width="9.33" height="10.67" rx="1.33" stroke="#FF6467" strokeWidth="1.33"/>
-                      <rect x="5.33" y="1.33" width="5.33" height="2.67" rx="1.33" stroke="#FF6467" strokeWidth="1.33"/>
+                      <rect x="3.33" y="4" width="9.33" height="10.67" rx="1.33" stroke="#EF4444" strokeWidth="1.33"/>
+                      <rect x="5.33" y="1.33" width="5.33" height="2.67" rx="1.33" stroke="#EF4444" strokeWidth="1.33"/>
                     </svg>
                     Remove Hotel
                   </button>
@@ -1215,8 +1215,8 @@ export default function AdminDashboard() {
                 <div className="ad-modal-title">User Details</div>
                 <div className="ad-modal-close" onClick={() => setSelectedUser(null)}>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <rect x="4" y="4" width="12.80" height="1.60" rx="0.80" fill="#90A1B9" transform="rotate(45 4 4)"/>
-                    <rect x="4" y="12.80" width="12.80" height="1.60" rx="0.80" fill="#90A1B9" transform="rotate(-45 4 12.80)"/>
+                    <rect x="4" y="4" width="12.80" height="1.60" rx="0.80" fill="#94A3B8" transform="rotate(45 4 4)"/>
+                    <rect x="4" y="12.80" width="12.80" height="1.60" rx="0.80" fill="#94A3B8" transform="rotate(-45 4 12.80)"/>
                   </svg>
                 </div>
               </div>
@@ -1269,8 +1269,8 @@ export default function AdminDashboard() {
                       <span className="ad-user-detail-row-value">
                         <span className={`ad-rev-badge-verified ${selectedUser.is_active === 0 ? 'ad-rev-badge-inactive' : ''}`} style={{ padding: '2px 8px' }}>
                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                            <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke={selectedUser.is_active === 0 ? '#FF6467' : '#00D492'} strokeWidth="1.1"/>
-                            <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke={selectedUser.is_active === 0 ? '#FF6467' : '#00D492'} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+                            <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke={selectedUser.is_active === 0 ? '#EF4444' : '#10B981'} strokeWidth="1.1"/>
+                            <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke={selectedUser.is_active === 0 ? '#EF4444' : '#10B981'} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                           {selectedUser.is_active === 0 ? 'Inactive' : 'Active'}
                         </span>
@@ -1281,8 +1281,8 @@ export default function AdminDashboard() {
                       <span className="ad-user-detail-row-value">
                         <span className={`ad-rev-badge-verified`} style={{ padding: '2px 8px' }}>
                           <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                            <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke={selectedUser.email_verified ? '#00D492' : '#FF6467'} strokeWidth="1.1"/>
-                            <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke={selectedUser.email_verified ? '#00D492' : '#FF6467'} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
+                            <rect x="1.5" y="1.5" width="9" height="9" rx="2" stroke={selectedUser.email_verified ? '#10B981' : '#EF4444'} strokeWidth="1.1"/>
+                            <path d="M3.5 6L5.2 7.7L8.5 4.5" stroke={selectedUser.email_verified ? '#10B981' : '#EF4444'} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                           {selectedUser.email_verified ? 'Verified' : 'Not verified'}
                         </span>
@@ -1322,7 +1322,7 @@ export default function AdminDashboard() {
                               <div className="ad-user-detail-sub-head">
                                 <span className="ad-user-detail-sub-title">{r.hotel_name}</span>
                                 <span className="ad-user-detail-sub-stars">
-                                  {r.rating} <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17" fill="#FFB900" stroke="#FFB900" strokeWidth="1.17"/></svg>
+                                  {r.rating} <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="1.17" y="1.17" width="11.67" height="11.13" rx="1.17" fill="#F5A623" stroke="#F5A623" strokeWidth="1.17"/></svg>
                                 </span>
                               </div>
                               {r.comment && <div className="ad-user-detail-sub-comment">{r.comment}</div>}
@@ -1349,8 +1349,8 @@ export default function AdminDashboard() {
                     onClick={() => { setDeleteConfirmUser(selectedUser); }}
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <rect x="3.33" y="4" width="9.33" height="10.67" rx="1.33" stroke="#FF6467" strokeWidth="1.33"/>
-                      <rect x="5.33" y="1.33" width="5.33" height="2.67" rx="1.33" stroke="#FF6467" strokeWidth="1.33"/>
+                      <rect x="3.33" y="4" width="9.33" height="10.67" rx="1.33" stroke="#EF4444" strokeWidth="1.33"/>
+                      <rect x="5.33" y="1.33" width="5.33" height="2.67" rx="1.33" stroke="#EF4444" strokeWidth="1.33"/>
                     </svg>
                     {selectedUser.is_active === 0 ? 'Deactivated' : 'Deactivate User'}
                   </button>
@@ -1367,10 +1367,10 @@ export default function AdminDashboard() {
               <div className="ad-modal-body" style={{ textAlign: 'center', paddingTop: 32 }}>
                 <div className="ad-delete-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 6H21" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M10 11V17M14 11V17" stroke="#FF6467" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M3 6H21" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M10 11V17M14 11V17" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
                   </svg>
                 </div>
                 <div className="ad-modal-title" style={{ fontSize: 18, paddingTop: 16 }}>Deactivate User</div>

@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap');
+
 .ad-page {
   display: flex;
   min-height: 100vh;
-  background: #020618;
+  background: #F0F7FF;
   font-family: 'Inter', sans-serif;
 }
 
@@ -9,22 +11,24 @@
 .ad-sidebar {
   width: 240px;
   min-width: 240px;
-  background: #0F172B;
-  border-right: 1px solid #1D293D;
+  background: #FFFFFF;
+  border-right: 1px solid #E6EEF8;
   display: flex;
   flex-direction: column;
+  box-shadow: 4px 0 24px rgba(10, 27, 51, 0.04);
+  z-index: 10;
 }
 
 .ad-sidebar-header {
   padding: 24px;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
 }
 
 .ad-logo-wrap {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
 }
 
@@ -35,10 +39,18 @@
 }
 
 .ad-logo-badge {
-  color: #155DFC;
-  font-size: 12px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.10), rgba(152, 16, 250, 0.10));
+  border-radius: 100px;
+  color: #2563EB;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   line-height: 16px;
+  text-transform: uppercase;
 }
 
 /* ===== NAV ===== */
@@ -54,23 +66,30 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: 14px;
-  color: #90A1B9;
+  border-radius: 12px;
+  color: #4B5563;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   cursor: pointer;
   margin-bottom: 4px;
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .ad-nav-item:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(37, 99, 235, 0.06);
+  color: #2563EB;
 }
 
 .ad-nav-active {
-  background: #1447E6;
-  color: #020618;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  color: #FFFFFF;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.30);
+}
+
+.ad-nav-active:hover {
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  color: #FFFFFF;
 }
 
 .ad-nav-active .ad-nav-chevron {
@@ -89,7 +108,7 @@
 /* ===== FOOTER ===== */
 .ad-sidebar-footer {
   padding: 16px;
-  border-top: 1px solid #1D293D;
+  border-top: 1px solid #E9EEF8;
 }
 
 .ad-user-row {
@@ -102,26 +121,27 @@
 .ad-user-avatar {
   width: 32px;
   height: 32px;
-  background: #314158;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.30);
 }
 
 .ad-user-name {
-  color: #fff;
+  color: #1A2B49;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 16px;
 }
 
 .ad-user-email {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -133,8 +153,8 @@
   gap: 8px;
   padding: 8px 12px;
   margin-top: 12px;
-  border-radius: 14px;
-  color: #90A1B9;
+  border-radius: 12px;
+  color: #6B7280;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -142,7 +162,8 @@
 }
 
 .ad-signout:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
 }
 
 /* ===== MAIN ===== */
@@ -150,19 +171,21 @@
   flex: 1;
   padding: 32px;
   overflow: hidden;
+  background: linear-gradient(180deg, #F4F9FF 0%, #F0F7FF 100%);
 }
 
 .ad-page-title {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: 0.07px;
+  letter-spacing: 0.02px;
   margin: 0;
 }
 
 .ad-page-date {
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -178,9 +201,9 @@
 }
 
 .ad-eyebrow {
-  color: #FFB900;
+  color: #F5A623;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   line-height: 16px;
@@ -191,30 +214,34 @@
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  background: #1447E6;
-  color: #020618;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
+  color: #FFFFFF;
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
   cursor: pointer;
   white-space: nowrap;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.30);
 }
 
 .ad-overview-cta:hover {
-  opacity: 0.85;
+  opacity: 0.95;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(124, 58, 237, 0.35);
 }
 
 .ad-stat-hover {
   cursor: pointer;
-  transition: outline-color 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
 }
 
 .ad-stat-hover:hover {
-  outline-color: #1447E6;
+  box-shadow: 0 10px 24px rgba(10, 27, 51, 0.10);
+  transform: translateY(-2px);
 }
 
 /* ===== STATS ===== */
@@ -227,40 +254,43 @@
 .ad-stat-card {
   flex: 1;
   padding: 20px;
-  background: #0F172B;
+  background: #FFFFFF;
   border-radius: 16px;
-  outline: 1px solid #1D293D;
+  outline: 1px solid #E5E7EB;
   outline-offset: -1px;
+  box-shadow: 0 1px 2px rgba(10, 27, 51, 0.04);
+  transition: box-shadow 0.15s, transform 0.15s;
 }
 
 .ad-stat-icon {
   width: 40px;
   height: 40px;
-  border-radius: 14px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .ad-stat-number {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 24px;
   font-weight: 700;
   line-height: 32px;
-  letter-spacing: 0.07px;
+  letter-spacing: 0.02px;
   padding-top: 16px;
 }
 
 .ad-stat-label {
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   padding-top: 2px;
 }
 
 .ad-stat-sub {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -276,11 +306,12 @@
 
 .ad-panel {
   flex: 1;
-  background: #0F172B;
+  background: #FFFFFF;
   border-radius: 16px;
-  outline: 1px solid #1D293D;
+  outline: 1px solid #E5E7EB;
   outline-offset: -1px;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(10, 27, 51, 0.04);
 }
 
 .ad-panel-header {
@@ -288,14 +319,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
 }
 
 .ad-panel-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
@@ -305,11 +337,16 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #FFB900;
+  color: #2563EB;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 16px;
   cursor: pointer;
+  transition: color 0.15s;
+}
+
+.ad-panel-manage:hover {
+  color: #7C3AED;
 }
 
 /* ===== HOTEL LIST ===== */
@@ -323,16 +360,21 @@
   align-items: center;
   gap: 16px;
   padding: 16px 24px;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
+  transition: background 0.15s;
 }
 
 .ad-hotel-row:last-child {
   border-bottom: none;
 }
 
+.ad-hotel-row:hover {
+  background: #F8FAFF;
+}
+
 .ad-rank {
   width: 20px;
-  color: #62748E;
+  color: #6B7280;
   font-size: 13px;
   font-weight: 700;
   line-height: 20px;
@@ -344,7 +386,7 @@
   display: flex;
   gap: 8px;
   padding: 12px 24px;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
 }
 
 .ad-booking-chip {
@@ -356,24 +398,24 @@
 }
 
 .ad-booking-chip-confirmed {
-  color: #00D492;
-  background: rgba(0, 212, 146, 0.12);
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .ad-booking-chip-pending {
-  color: #FFB900;
-  background: rgba(255, 185, 0, 0.12);
+  color: #F5A623;
+  background: rgba(245, 166, 35, 0.14);
 }
 
 .ad-booking-chip-cancelled {
-  color: #FF6467;
-  background: rgba(255, 100, 103, 0.12);
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .ad-hotel-img {
   width: 40px;
   height: 40px;
-  background: #1D293D;
+  background: #E9EEF8;
   border-radius: 14px;
   object-fit: cover;
 }
@@ -383,14 +425,14 @@
 }
 
 .ad-hotel-name {
-  color: #fff;
+  color: #1A2B49;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
 }
 
 .ad-hotel-location {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -401,11 +443,11 @@
   align-items: center;
   gap: 4px;
   padding: 4px 8px;
-  background: rgba(0, 188, 125, 0.10);
+  background: rgba(16, 185, 129, 0.12);
   border-radius: 10px;
-  color: #00D492;
+  color: #10B981;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 16px;
 }
 
@@ -418,14 +460,14 @@
 }
 
 .ad-booking-amount {
-  color: #fff;
+  color: #1A2B49;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .ad-booking-status {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   padding: 2px 8px;
@@ -433,22 +475,22 @@
 }
 
 .ad-booking-status-confirmed {
-  color: #00D492;
-  background: rgba(0, 212, 146, 0.12);
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .ad-booking-status-pending {
-  color: #FFB900;
-  background: rgba(255, 185, 0, 0.12);
+  color: #F5A623;
+  background: rgba(245, 166, 35, 0.14);
 }
 
 .ad-booking-status-cancelled {
-  color: #FF6467;
-  background: rgba(255, 100, 103, 0.12);
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .ad-booking-date {
-  color: #62748E;
+  color: #6B7280;
   font-size: 11px;
 }
 
@@ -472,18 +514,19 @@
 
 .ad-hotel-card {
   cursor: pointer;
-  transition: outline-color 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
 }
 
 .ad-hotel-card:hover {
-  outline-color: #1447E6;
+  box-shadow: 0 12px 28px rgba(10, 27, 51, 0.12);
+  transform: translateY(-2px);
 }
 
 .ad-hotel-card-img {
   width: 100%;
   height: 120px;
-  background: #1D293D;
-  border-radius: 6px;
+  background: #E9EEF8;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -503,22 +546,22 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: #0F172B;
+  background: #FFFFFF;
   border: none;
-  border-radius: 14px;
-  outline: 1px solid #1D293D;
+  border-radius: 12px;
+  outline: 1px solid #E5E7EB;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
   transition: outline-color 0.15s, background 0.15s;
 }
 
 .ad-rev-filter-btn:hover {
-  outline-color: #1447E6;
+  outline-color: #2563EB;
 }
 
 .ad-rev-filter-active {
-  background: rgba(251, 44, 54, 0.08);
-  outline: 1px solid rgba(251, 44, 54, 0.30);
+  background: rgba(239, 68, 68, 0.07);
+  outline: 1px solid rgba(239, 68, 68, 0.30);
 }
 
 /* ===== HOTEL DETAIL MODAL ===== */
@@ -533,7 +576,7 @@
 .ad-hotel-modal-img-wrap {
   position: relative;
   height: 208px;
-  background: #1D293D;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
   overflow: hidden;
   border-radius: 16px 16px 0 0;
 }
@@ -548,13 +591,13 @@
 .ad-hotel-modal-img-placeholder {
   width: 100%;
   height: 100%;
-  background: #1D293D;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.70), rgba(152, 16, 250, 0.70));
 }
 
 .ad-hotel-modal-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(0deg, rgba(10, 27, 51, 0.65) 0%, rgba(10, 27, 51, 0) 100%);
   border-radius: 16px 16px 0 0;
 }
 
@@ -564,7 +607,7 @@
   right: 16px;
   width: 32px;
   height: 32px;
-  background: rgba(0,0,0,0.50);
+  background: rgba(10, 27, 51, 0.50);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -582,6 +625,7 @@
 
 .ad-hotel-modal-title {
   color: #fff;
+  font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
@@ -592,7 +636,7 @@
   align-items: center;
   gap: 8px;
   padding-top: 4px;
-  color: #CAD5E2;
+  color: #E2E8F0;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -613,15 +657,15 @@
 }
 
 .ad-hotel-modal-rating-text {
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 16px;
   padding-left: 4px;
 }
 
 .ad-hotel-modal-review-count {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -639,21 +683,22 @@
   flex: 1;
   text-align: center;
   padding: 14px 8px;
-  background: #1D293D;
-  border-radius: 14px;
+  background: #F0F7FF;
+  border-radius: 12px;
 }
 
 .ad-hotel-modal-stat-value {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 18px;
   font-weight: 700;
   line-height: 24px;
 }
 
 .ad-hotel-modal-stat-label {
-  color: #62748E;
+  color: #6B7280;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   line-height: 16px;
@@ -665,16 +710,16 @@
 }
 
 .ad-hotel-modal-section-label {
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   line-height: 16px;
   letter-spacing: 0.60px;
 }
 
 .ad-hotel-modal-section-text {
-  color: #90A1B9;
+  color: #4B5563;
   font-size: 14px;
   font-weight: 400;
   line-height: 22.75px;
@@ -693,9 +738,9 @@
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  background: #1D293D;
+  background: #F0F7FF;
   border-radius: 10px;
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -708,9 +753,9 @@
   gap: 8px;
   padding: 16px;
   margin-top: 12px;
-  background: rgba(29, 41, 61, 0.40);
-  border-radius: 14px;
-  color: #62748E;
+  background: rgba(37, 99, 235, 0.05);
+  border-radius: 12px;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -726,12 +771,12 @@
 
 .ad-hotel-modal-review-item {
   padding: 12px;
-  background: rgba(29, 41, 61, 0.40);
-  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.05);
+  border-radius: 12px;
 }
 
 .ad-hotel-modal-review-comment {
-  color: #90A1B9;
+  color: #4B5563;
   font-size: 13px;
   font-weight: 400;
   line-height: 18px;
@@ -749,7 +794,7 @@
 }
 
 .ad-empty-title {
-  color: #62748E;
+  color: #6B7280;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -757,7 +802,7 @@
 }
 
 .ad-empty-sub {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -772,23 +817,25 @@
   gap: 24px;
   padding: 20px;
   margin-top: 24px;
-  background: #0F172B;
+  background: #FFFFFF;
   border-radius: 16px;
-  outline: 1px solid #1D293D;
+  outline: 1px solid #E5E7EB;
   outline-offset: -1px;
+  box-shadow: 0 1px 2px rgba(10, 27, 51, 0.04);
 }
 
 .ad-rev-summary-left {
   width: 113px;
   padding-right: 24px;
-  border-right: 1px solid #1D293D;
+  border-right: 1px solid #E9EEF8;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .ad-rev-avg {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 48px;
   font-weight: 700;
   line-height: 48px;
@@ -804,7 +851,7 @@
 }
 
 .ad-rev-count {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -829,16 +876,16 @@
 
 .ad-rev-bar-label {
   width: 20px;
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 16px;
 }
 
 .ad-rev-bar-track {
   flex: 1;
   height: 6px;
-  background: #1D293D;
+  background: #E9EEF8;
   border-radius: 100px;
   overflow: hidden;
 }
@@ -852,7 +899,7 @@
 .ad-rev-bar-count {
   width: 32px;
   text-align: right;
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -881,40 +928,44 @@
 .ad-rev-search-input {
   width: 100%;
   padding: 10px 16px 10px 40px;
-  background: #0F172B;
-  border: none;
-  border-radius: 14px;
-  outline: 1px solid #1D293D;
-  color: #fff;
+  background: #FFFFFF;
+  border: 1.5px solid #D8E1EE;
+  border-radius: 12px;
+  color: #1A2B49;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 400;
   box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ad-rev-search-input::placeholder {
-  color: #62748E;
+  color: #9CA3AF;
 }
 
 .ad-rev-search-input:focus {
-  outline: 1px solid #1447E6;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  outline: none;
 }
 
 .ad-rev-sort {
   padding: 10px 16px;
-  background: #0F172B;
-  border: none;
-  border-radius: 14px;
-  outline: 1px solid #1D293D;
-  color: #CAD5E2;
+  background: #FFFFFF;
+  border: 1.5px solid #D8E1EE;
+  border-radius: 12px;
+  color: #4B5563;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ad-rev-sort:focus {
-  outline: 1px solid #1447E6;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  outline: none;
 }
 
 .ad-rev-card-hotel-link {
@@ -923,7 +974,7 @@
 }
 
 .ad-rev-card-hotel-link:hover {
-  color: #1447E6;
+  color: #2563EB;
 }
 
 /* ===== VERIFIED BADGE ===== */
@@ -932,21 +983,21 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  background: rgba(0, 212, 146, 0.10);
+  background: rgba(16, 185, 129, 0.12);
   border-radius: 100px;
-  color: #00D492;
+  color: #10B981;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 16px;
 }
 
 .ad-rev-delete {
-  color: #FF6467;
+  color: #EF4444;
   transition: background 0.15s;
 }
 
 .ad-rev-delete:hover {
-  background: rgba(255, 100, 103, 0.12);
+  background: rgba(239, 68, 68, 0.12);
 }
 
 /* ===== HOTEL BREAKDOWN ===== */
@@ -961,7 +1012,8 @@
 }
 
 .ad-rev-breakdown-title {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
@@ -989,9 +1041,9 @@
 .ad-rev-breakdown-name {
   width: 30%;
   min-width: 90px;
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 16px;
   white-space: nowrap;
   overflow: hidden;
@@ -1001,7 +1053,7 @@
 .ad-rev-breakdown-bar {
   flex: 1;
   height: 6px;
-  background: #1D293D;
+  background: #E9EEF8;
   border-radius: 100px;
   overflow: hidden;
 }
@@ -1009,14 +1061,14 @@
 .ad-rev-breakdown-bar-fill {
   display: block;
   height: 100%;
-  background: #FFB900;
+  background: #F5A623;
   border-radius: 100px;
 }
 
 .ad-rev-breakdown-meta {
   width: 64px;
   text-align: right;
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -1033,20 +1085,21 @@
 
 .ad-pagination-btn {
   padding: 8px 16px;
-  background: #0F172B;
-  border: none;
+  background: #FFFFFF;
+  border: 1.5px solid #D8E1EE;
   border-radius: 10px;
-  outline: 1px solid #1D293D;
-  color: #CAD5E2;
+  color: #4B5563;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: outline-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ad-pagination-btn:hover:not(:disabled) {
-  outline-color: #1447E6;
+  border-color: #2563EB;
+  color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 .ad-pagination-btn:disabled {
@@ -1055,7 +1108,7 @@
 }
 
 .ad-pagination-info {
-  color: #62748E;
+  color: #6B7280;
   font-size: 13px;
   font-weight: 400;
 }
@@ -1065,7 +1118,7 @@
   width: 56px;
   height: 56px;
   margin: 0 auto;
-  background: rgba(255, 100, 103, 0.10);
+  background: rgba(239, 68, 68, 0.10);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1073,7 +1126,7 @@
 }
 
 .ad-delete-text {
-  color: #90A1B9;
+  color: #4B5563;
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -1091,16 +1144,18 @@
 
 .ad-rev-card {
   padding: 20px;
-  background: #0F172B;
+  background: #FFFFFF;
   border-radius: 16px;
-  outline: 1px solid #1D293D;
+  outline: 1px solid #E5E7EB;
   outline-offset: -1px;
   cursor: pointer;
-  transition: outline-color 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
+  box-shadow: 0 1px 2px rgba(10, 27, 51, 0.04);
 }
 
 .ad-rev-card:hover {
-  outline-color: #1447E6;
+  box-shadow: 0 10px 24px rgba(10, 27, 51, 0.10);
+  transform: translateY(-1px);
 }
 
 .ad-rev-card-top {
@@ -1120,19 +1175,20 @@
   width: 40px;
   height: 40px;
   min-width: 40px;
-  background: #314158;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 14px;
   font-weight: 700;
   line-height: 20px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28);
 }
 
 .ad-rev-card-name {
-  color: #fff;
+  color: #1A2B49;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
@@ -1154,7 +1210,7 @@
 }
 
 .ad-rev-card-hotel {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -1162,7 +1218,7 @@
 }
 
 .ad-rev-card-date {
-  color: #45556C;
+  color: #9CA3AF;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -1181,12 +1237,12 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  background: rgba(251, 44, 54, 0.10);
+  background: rgba(239, 68, 68, 0.10);
   border-radius: 100px;
-  outline: 1px solid rgba(251, 44, 54, 0.20);
-  color: #FF6467;
+  outline: 1px solid rgba(239, 68, 68, 0.20);
+  color: #EF4444;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 16px;
 }
 
@@ -1199,20 +1255,20 @@
 }
 
 .ad-rev-kebab:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(37, 99, 235, 0.06);
 }
 
 .ad-rev-card-title {
-  color: #E2E8F0;
+  color: #1A2B49;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   padding-top: 8px;
   padding-left: 56px;
 }
 
 .ad-rev-card-comment {
-  color: #90A1B9;
+  color: #4B5563;
   font-size: 14px;
   font-weight: 400;
   line-height: 22.75px;
@@ -1228,21 +1284,24 @@
 .ad-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 24, 0.70);
+  background: rgba(10, 27, 51, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .ad-modal {
   width: 510px;
   max-width: 90vw;
-  background: #0F172B;
+  background: #FFFFFF;
   border-radius: 16px;
-  outline: 1px solid #1D293D;
+  outline: 1px solid #E5E7EB;
   outline-offset: -1px;
   overflow: hidden;
+  box-shadow: 0 20px 60px rgba(10, 27, 51, 0.20);
 }
 
 .ad-modal-header {
@@ -1250,11 +1309,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
 }
 
 .ad-modal-title {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 600;
   line-height: 30px;
@@ -1269,7 +1329,7 @@
 }
 
 .ad-modal-close:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(37, 99, 235, 0.08);
 }
 
 .ad-modal-body {
@@ -1286,26 +1346,28 @@
   width: 48px;
   height: 48px;
   min-width: 48px;
-  background: #314158;
+  background: linear-gradient(135deg, #2563EB, #9810FA);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 18px;
   font-weight: 700;
   line-height: 28px;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.30);
 }
 
 .ad-modal-name {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
 }
 
 .ad-modal-email {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -1319,9 +1381,9 @@
 }
 
 .ad-modal-rating {
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 16px;
   padding-left: 4px;
 }
@@ -1332,11 +1394,11 @@
   gap: 8px;
   padding: 12px;
   margin-top: 16px;
-  background: rgba(29, 41, 61, 0.60);
-  border-radius: 14px;
-  color: #CAD5E2;
+  background: #F0F7FF;
+  border-radius: 12px;
+  color: #4B5563;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 20px;
 }
 
@@ -1345,16 +1407,16 @@
 }
 
 .ad-modal-comment-label {
-  color: #62748E;
+  color: #6B7280;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   line-height: 16px;
   letter-spacing: 0.60px;
 }
 
 .ad-modal-comment-text {
-  color: #CAD5E2;
+  color: #374151;
   font-size: 14px;
   font-weight: 400;
   line-height: 22.75px;
@@ -1362,7 +1424,7 @@
 }
 
 .ad-modal-date {
-  color: #45556C;
+  color: #9CA3AF;
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
@@ -1379,31 +1441,32 @@
   flex: 1;
   padding: 10px;
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s;
 }
 
 .ad-modal-btn:hover {
-  opacity: 0.85;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .ad-modal-btn-close {
-  background: #1D293D;
-  color: #fff;
+  background: #EFF4FC;
+  color: #1A2B49;
 }
 
 .ad-modal-btn-delete {
-  background: rgba(251, 44, 54, 0.10);
-  color: #FF6467;
+  background: rgba(239, 68, 68, 0.10);
+  color: #EF4444;
 }
 
 /* ===== USERS TAB ===== */
@@ -1418,19 +1481,21 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #0F172B;
-  border: 1px solid #1D293D;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   outline: 1px solid transparent;
   outline-offset: -1px;
   border-radius: 14px;
   padding: 14px 16px;
   cursor: pointer;
-  transition: background 0.15s, outline-color 0.15s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  box-shadow: 0 1px 2px rgba(10, 27, 51, 0.04);
 }
 
 .ad-user-row-card:hover {
-  background: #111C33;
-  outline-color: #314158;
+  background: #F8FAFF;
+  box-shadow: 0 8px 20px rgba(10, 27, 51, 0.08);
+  transform: translateY(-1px);
 }
 
 .ad-user-info {
@@ -1457,13 +1522,13 @@
 }
 
 .ad-user-status-inactive {
-  color: #FF6467;
-  background: rgba(251, 44, 54, 0.12);
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .ad-rev-badge-inactive {
-  color: #FF6467;
-  background: rgba(251, 44, 54, 0.12);
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .ad-user-stats {
@@ -1477,11 +1542,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #CAD5E2;
+  color: #4B5563;
   font-size: 12px;
-  font-weight: 500;
-  background: #111C33;
-  border: 1px solid #1D293D;
+  font-weight: 600;
+  background: #F0F7FF;
+  border: 1px solid #E5E7EB;
   padding: 4px 10px;
   border-radius: 999px;
   white-space: nowrap;
@@ -1489,7 +1554,7 @@
 
 .ad-user-row-chevron {
   flex-shrink: 0;
-  color: #90A1B9;
+  color: #94A3B8;
   display: flex;
   align-items: center;
 }
@@ -1513,7 +1578,7 @@
 .ad-card-modal-footer {
   flex: 0 0 auto;
   padding: 16px 24px;
-  border-top: 1px solid #1D293D;
+  border-top: 1px solid #E9EEF8;
 }
 
 .ad-user-detail-stats {
@@ -1524,24 +1589,25 @@
 }
 
 .ad-user-detail-stat {
-  background: #0F172B;
-  border: 1px solid #1D293D;
+  background: #F0F7FF;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 14px;
   text-align: center;
 }
 
 .ad-user-detail-stat-value {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
 }
 
 .ad-user-detail-stat-label {
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 2px;
 }
 
@@ -1550,18 +1616,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid #1D293D;
+  border-bottom: 1px solid #E9EEF8;
 }
 
 .ad-user-detail-row-label {
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 13px;
 }
 
 .ad-user-detail-row-value {
-  color: #fff;
+  color: #1A2B49;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .ad-user-detail-section {
@@ -1569,7 +1635,8 @@
 }
 
 .ad-user-detail-section-label {
-  color: #fff;
+  color: #1A2B49;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 10px;
@@ -1584,8 +1651,8 @@
 }
 
 .ad-user-detail-sub {
-  background: #0F172B;
-  border: 1px solid #1D293D;
+  background: #F8FAFF;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 12px 14px;
 }
@@ -1598,7 +1665,7 @@
 }
 
 .ad-user-detail-sub-title {
-  color: #fff;
+  color: #1A2B49;
   font-size: 14px;
   font-weight: 600;
 }
@@ -1613,37 +1680,37 @@
 }
 
 .ad-user-detail-sub-status-pending {
-  color: #fff;
-  background: rgba(245, 158, 11, 0.15);
+  color: #B45309;
+  background: rgba(245, 166, 35, 0.15);
 }
 
 .ad-user-detail-sub-status-confirmed {
-  color: #fff;
-  background: rgba(25, 118, 210, 0.18);
+  color: #1565C0;
+  background: rgba(37, 99, 235, 0.12);
 }
 
 .ad-user-detail-sub-status-cancelled {
-  color: #fff;
-  background: rgba(211, 47, 47, 0.18);
+  color: #C62828;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .ad-user-detail-sub-stars {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: #FFB900;
+  color: #F5A623;
   font-size: 13px;
   font-weight: 700;
 }
 
 .ad-user-detail-sub-meta {
-  color: #90A1B9;
+  color: #6B7280;
   font-size: 12px;
   margin-top: 6px;
 }
 
 .ad-user-detail-sub-comment {
-  color: #CAD5E2;
+  color: #374151;
   font-size: 13px;
   line-height: 20px;
   margin-top: 8px;
