@@ -819,6 +819,10 @@
   margin-bottom: 0;
 }
 
+.hod-mgmt-row + .hod-mgmt-form-grid {
+  margin-top: 14px;
+}
+
 .hod-mgmt-row .hod-input,
 .hod-mgmt-row .hod-textarea {
   width: 100%;
