@@ -220,8 +220,14 @@ export default function MyBookingDetail() {
               <span className="mbd-stay-days">{nights} night{nights > 1 ? 's' : ''}</span>
               <span className="mbd-stay-sep">·</span>
               <span className="mbd-stay-rate">{formatLKRFixed(perNight)}/night</span>
+              <span className="mbd-stay-sep">·</span>
+              <span style={{ fontWeight: 600, color: '#2563EB' }}>{booking.num_rooms || 1} room{(booking.num_rooms || 1) > 1 ? 's' : ''}</span>
             </div>
             <hr className="mbd-divider" />
+            <div className="mbd-info-row">
+              <span className="mbd-info-label">Rooms</span>
+              <span className="mbd-info-value">{booking.num_rooms || 1} Room{(booking.num_rooms || 1) > 1 ? 's' : ''}</span>
+            </div>
             <div className="mbd-info-row">
               <span className="mbd-info-label">Guests</span>
               <span className="mbd-info-value">{booking.guests || 1} Guest{(booking.guests || 1) > 1 ? 's' : ''}</span>

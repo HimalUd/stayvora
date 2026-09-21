@@ -10,6 +10,7 @@ class Room extends Model {
             'room_type' => $data['room_type'],
             'price' => $data['price'],
             'capacity' => $data['capacity'] ?? 2,
+            'total_rooms' => max(1, (int)($data['total_rooms'] ?? 1)),
             'description' => $data['description'] ?? ''
         ]);
     }

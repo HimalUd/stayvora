@@ -202,6 +202,10 @@ export default function HotelOwnerBookingDetail() {
               <span className="hobd-stay-days">{nights} night{nights > 1 ? 's' : ''}</span>
               <span className="hobd-stay-sep">·</span>
               <span className="hobd-stay-rate">{formatLKRFixed(perNight)}/night</span>
+              <span className="hobd-stay-sep">·</span>
+              <span style={{ fontWeight: 600, color: '#2563EB' }}>{booking.num_rooms || 1} room{(booking.num_rooms || 1) > 1 ? 's' : ''}</span>
+              <span className="hobd-stay-sep">·</span>
+              <span>{booking.guests} guest{booking.guests > 1 ? 's' : ''}</span>
             </div>
             <hr className="hobd-divider" />
             <div className="hobd-info-row">

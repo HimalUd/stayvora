@@ -286,7 +286,13 @@ export default function HotelDetail() {
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                           <path d="M3.33 10l4.17 4.17 9.17-9.17" stroke="#00A63E" strokeWidth="1.67" strokeLinecap="round" />
                         </svg>
-                        <span>Sleeps up to {room.capacity} guests</span>
+                        <span>Sleeps up to {room.capacity} guests per room</span>
+                      </div>
+                      <div className="hd-perk">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M3.33 10l4.17 4.17 9.17-9.17" stroke="#00A63E" strokeWidth="1.67" strokeLinecap="round" />
+                        </svg>
+                        <span>{room.total_rooms || 1} room{(room.total_rooms || 1) > 1 ? 's' : ''} available in property</span>
                       </div>
                       {room.description && (
                         <div className="hd-perk">

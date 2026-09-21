@@ -51,11 +51,39 @@ Create a room in a hotel.
 | room_type   | string | Yes      | e.g. Deluxe, Standard    |
 | price       | float  | Yes      | Price per night (> 0)   |
 | capacity    | int    | No       | Max guests (default 2)   |
+| total_rooms | int    | No       | Total rooms (default 1)  |
 | description | string | No       | Room description         |
 
 **Response 201:**
 ```json
 { "message": "Room created successfully", "room": { "...full room object..." } }
+```
+
+---
+
+## GET /availability
+
+Check room availability count for specific dates.
+
+**Authentication:** None (public)
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Description    |
+|-----------|--------|----------|----------------|
+| room_id   | int    | Yes      | Room ID        |
+| check_in  | string | No       | YYYY-MM-DD     |
+| check_out | string | No       | YYYY-MM-DD     |
+
+**Response 200:**
+```json
+{
+  "room_id": 1,
+  "total_rooms": 5,
+  "available_rooms": 3,
+  "capacity": 2,
+  "is_available": true
+}
 ```
 
 **Errors:** 401/403 (not owner), 404 (hotel not found), 422 (validation)

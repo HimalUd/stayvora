@@ -60,14 +60,24 @@ class BookingController extends Controller {
                 $this->json(["message" => "Hotel not found"], 404);
             }
 
-            if ($this->bookingModel->isRoomBooked((int)$roomId, $checkIn, $checkOut)) {
-                $this->json(["message" => "Room is already booked for these dates"], 409);
+            $capacity = max(1, (int)($room['capacity'] ?? 2));
+            $roomsNeeded = (int)ceil($guests / $capacity);
+            $numRooms = isset($input['num_rooms']) && (int)$input['num_rooms'] > 0
+                ? max($roomsNeeded, (int)$input['num_rooms'])
+                : $roomsNeeded;
+
+            $availableRooms = $this->bookingModel->getAvailableRoomsCount((int)$roomId, $checkIn, $checkOut);
+            if ($numRooms > $availableRooms) {
+                $msg = $availableRooms <= 0
+                    ? "This room is completely booked for the selected dates."
+                    : "Only {$availableRooms} room(s) available for the selected dates, but {$numRooms} room(s) are required for {$guests} guest(s).";
+                $this->json(["message" => $msg], 409);
             }
 
             $checkInDate = new DateTime($checkIn);
             $checkOutDate = new DateTime($checkOut);
             $nights = max($checkInDate->diff($checkOutDate)->days, 1);
-            $totalPrice = $room['price'] * $nights;
+            $totalPrice = $room['price'] * $nights * $numRooms;
 
             $bookingCode = 'BKD' . strtoupper(substr(uniqid(), -7));
             $guestName = trim($firstName . ' ' . $lastName);
@@ -75,7 +85,8 @@ class BookingController extends Controller {
             $bookingId = $this->bookingModel->createBooking(
                 $this->getUserId(), (int)$hotelId, (int)$roomId,
                 $checkIn, $checkOut, $guests, $totalPrice,
-                $bookingCode, $guestName, $email, $phone, $specialRequests
+                $bookingCode, $guestName, $email, $phone, $specialRequests,
+                $numRooms
             );
 
             $booking = $this->bookingModel->findById($bookingId);
@@ -85,8 +96,8 @@ class BookingController extends Controller {
                 $bookingId,
                 'booking',
                 "New booking for " . $hotel['name'],
-                $guestName . " booked " . $room['room_type'] . " from " . $checkIn . " to " . $checkOut .
-                    " (" . $nights . " night(s), $" . $totalPrice . "). Booking code: " . $bookingCode
+                $guestName . " booked " . $numRooms . " x " . $room['room_type'] . " (" . $guests . " guest(s)) from " . $checkIn . " to " . $checkOut .
+                    " (" . $nights . " night(s), LKR " . number_format($totalPrice, 2) . "). Booking code: " . $bookingCode
             );
 
             try {

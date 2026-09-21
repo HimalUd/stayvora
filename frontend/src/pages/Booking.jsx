@@ -6,6 +6,7 @@ import { useHotel } from '../hooks/useHotels';
 import { useRooms } from '../hooks/useRooms';
 import { useCreateBooking } from '../hooks/useBookings';
 import { useAuth } from '../context/AuthContext';
+import { roomsAPI } from '../utils/api';
 import { bookingSchema } from '../lib/validations';
 import { formatLKR } from '../utils/currency';
 import './Booking.css';
@@ -46,7 +47,9 @@ export default function Booking() {
   }, [rooms.length]);
 
   const room = rooms.find((r) => String(r.id) === String(selectedRoomId)) || rooms[0] || null;
-  const maxGuests = room?.capacity || 8;
+  const capacity = Math.max(1, Number(room?.capacity) || 2);
+  const totalRooms = Math.max(1, Number(room?.total_rooms) || 1);
+  const maxGuests = Math.max(capacity * totalRooms, 12);
 
   const toDateInput = (d) => d.toISOString().split('T')[0];
 
@@ -55,6 +58,9 @@ export default function Booking() {
   const [guestName, setGuestName] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Real-time room availability state
+  const [availData, setAvailData] = useState({ loading: false, availableRooms: null, totalRooms: null });
 
   const { register, handleSubmit: formSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(bookingSchema),
@@ -74,15 +80,54 @@ export default function Booking() {
   const checkOut = watch('check_out');
   const guests = watch('guests');
 
+  // Query date-based availability for the chosen room
+  useEffect(() => {
+    if (!room?.id || !checkIn || !checkOut || checkIn >= checkOut) {
+      setAvailData({ loading: false, availableRooms: null, totalRooms: null });
+      return;
+    }
+
+    let active = true;
+    setAvailData(prev => ({ ...prev, loading: true }));
+
+    roomsAPI.checkAvailability(room.id, checkIn, checkOut)
+      .then(res => {
+        if (active) {
+          setAvailData({
+            loading: false,
+            availableRooms: res.data?.available_rooms ?? null,
+            totalRooms: res.data?.total_rooms ?? totalRooms,
+          });
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setAvailData({ loading: false, availableRooms: null, totalRooms: null });
+        }
+      });
+
+    return () => { active = false; };
+  }, [room?.id, checkIn, checkOut, totalRooms]);
+
+  const guestsNum = Math.max(1, Number(guests) || 1);
+  const roomsNeeded = Math.max(1, Math.ceil(guestsNum / capacity));
+
+  const isUnavailable = availData.availableRooms !== null && (
+    availData.availableRooms <= 0 || roomsNeeded > availData.availableRooms
+  );
+
   const nights = getNights(checkIn, checkOut);
   const roomPrice = Number(room?.price) || 0;
-  const subtotal = nights * roomPrice;
+  const subtotal = nights * roomPrice * roomsNeeded;
   const taxes = subtotal * 0.12;
   const total = subtotal + taxes;
 
   const selectRoom = (r) => {
     setSelectedRoomId(String(r.id));
-    setValue('guests', Math.min(Number(guests || 2), r.capacity || 8));
+    const rCap = Math.max(1, Number(r.capacity) || 2);
+    const rTotal = Math.max(1, Number(r.total_rooms) || 1);
+    const rMax = Math.max(rCap * rTotal, 12);
+    setValue('guests', Math.min(Number(guests || 2), rMax));
   };
 
   const copyCode = () => {
@@ -94,6 +139,11 @@ export default function Booking() {
 
   const onSubmit = async (data) => {
     setSubmitError('');
+    if (isUnavailable) {
+      setSubmitError(`Cannot book: Only ${availData.availableRooms} room(s) available for the selected dates, but ${roomsNeeded} room(s) are required.`);
+      return;
+    }
+
     try {
       const res = await createBooking.mutateAsync({
         room_id: room.id,
@@ -101,6 +151,7 @@ export default function Booking() {
         check_in: data.check_in,
         check_out: data.check_out,
         guests: data.guests,
+        num_rooms: roomsNeeded,
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
@@ -232,7 +283,7 @@ export default function Booking() {
                           </span>
                           <span className="bk-room-info">
                             <span className="bk-room-name">{r.room_type}</span>
-                            {r.capacity && <span className="bk-room-cap">Sleeps up to {r.capacity} guests</span>}
+                            <span className="bk-room-cap">Sleeps {r.capacity} guests/room &middot; {r.total_rooms || 1} room{(r.total_rooms || 1) > 1 ? 's' : ''} total</span>
                           </span>
                           <span className="bk-room-price">{formatMoney(r.price)}<em>/night</em></span>
                         </button>
@@ -260,6 +311,53 @@ export default function Booking() {
                       </select>
                     </div>
                   </div>
+
+                  {/* Real-time Room Allocation & Date Availability Banner */}
+                  <div style={{
+                    marginTop: '16px',
+                    padding: '14px 16px',
+                    borderRadius: '12px',
+                    border: isUnavailable ? '1px solid #FCA5A5' : '1px solid #BAE6FD',
+                    background: isUnavailable ? '#FEF2F2' : '#F0F9FF',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '18px' }}>🛏️</span>
+                        <span style={{ fontWeight: 600, color: '#0A1B33', fontSize: '14px' }}>
+                          Room Allocation: <span style={{ color: '#2563EB', fontWeight: 700 }}>{roomsNeeded} Room{roomsNeeded > 1 ? 's' : ''}</span> for {guestsNum} Guest{guestsNum > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '12px', color: '#64748B', background: '#fff', padding: '2px 8px', borderRadius: '6px', border: '1px solid #E2E8F0', fontWeight: 500 }}>
+                        Capacity: {capacity} guests / room
+                      </span>
+                    </div>
+
+                    {availData.loading ? (
+                      <div style={{ fontSize: '13px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span className="spinner spinner-sm" style={{ width: '13px', height: '13px', borderWidth: '2px' }} />
+                        Checking availability for selected dates...
+                      </div>
+                    ) : availData.availableRooms !== null ? (
+                      <div>
+                        {availData.availableRooms <= 0 ? (
+                          <div style={{ color: '#DC2626', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>❌</span> Sold out for these dates! No rooms of this type are available.
+                          </div>
+                        ) : roomsNeeded > availData.availableRooms ? (
+                          <div style={{ color: '#DC2626', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>⚠️</span> Only {availData.availableRooms} room(s) available for these dates, but {roomsNeeded} room(s) are needed for {guestsNum} guests.
+                          </div>
+                        ) : (
+                          <div style={{ color: '#059669', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>✓</span> Available! {availData.availableRooms} of {availData.totalRooms} room(s) available for these dates.
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
 
                 <div className="bk-card bk-card-sm">
@@ -275,8 +373,12 @@ export default function Booking() {
                 </div>
 
                 {submitError && <p className="bk-error">{submitError}</p>}
-                <button type="submit" className="bk-submit-btn" disabled={isSubmitting}>
-                  {isSubmitting ? 'Booking...' : `Complete Booking — ${formatMoney(total)}`}
+                <button type="submit" className="bk-submit-btn" disabled={isSubmitting || isUnavailable}>
+                  {isSubmitting
+                    ? 'Booking...'
+                    : isUnavailable
+                    ? 'Dates Unavailable for this Room Count'
+                    : `Complete Booking (${roomsNeeded} Room${roomsNeeded > 1 ? 's' : ''}) — ${formatMoney(total)}`}
                 </button>
               </form>
             </div>
@@ -307,6 +409,9 @@ export default function Booking() {
                 <div className="bk-summary-divider" />
                 <div className="bk-summary-hotel">
                   <div className="bk-summary-room-type">{room.room_type}</div>
+                  <div style={{ fontSize: '13px', color: '#64748B', marginTop: '2px' }}>
+                    {roomsNeeded} room{roomsNeeded > 1 ? 's' : ''} &middot; {guestsNum} guest{guestsNum > 1 ? 's' : ''}
+                  </div>
                 </div>
                 <div className="bk-summary-divider" />
                 <div className="bk-summary-detail">
@@ -318,8 +423,12 @@ export default function Booking() {
                   <span>{formatDate(checkOut) || 'Select'}</span>
                 </div>
                 <div className="bk-summary-detail">
+                  <span>Rooms</span>
+                  <span style={{ fontWeight: 600, color: '#2563EB' }}>{roomsNeeded} Room{roomsNeeded > 1 ? 's' : ''}</span>
+                </div>
+                <div className="bk-summary-detail">
                   <span>Guests</span>
-                  <span>{guests}</span>
+                  <span>{guestsNum}</span>
                 </div>
                 <div className="bk-summary-detail">
                   <span>Nights</span>
@@ -327,11 +436,11 @@ export default function Booking() {
                 </div>
                 <div className="bk-summary-divider" />
                 <div className="bk-summary-detail">
-                  <span>{formatMoney(roomPrice)} × {nights} {nights === 1 ? 'night' : 'nights'}</span>
+                  <span>{formatMoney(roomPrice)} × {nights} {nights === 1 ? 'night' : 'nights'} × {roomsNeeded} {roomsNeeded === 1 ? 'room' : 'rooms'}</span>
                   <span>{formatMoney(subtotal)}</span>
                 </div>
                 <div className="bk-summary-detail">
-                  <span>Taxes & fees</span>
+                  <span>Taxes & fees (12%)</span>
                   <span>{formatMoney(taxes)}</span>
                 </div>
                 <div className="bk-summary-divider" />

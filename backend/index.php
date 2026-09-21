@@ -57,6 +57,7 @@ $routes = [
     'api/hotels/add_amenity'     => ['HotelController', 'addAmenity'],
     'api/hotels/delete_amenity'  => ['HotelController', 'deleteAmenity'],
     'api/rooms/list'             => ['RoomController', 'list'],
+    'api/rooms/availability'     => ['RoomController', 'availability'],
     'api/rooms/create'           => ['RoomController', 'create'],
     'api/rooms/update'           => ['RoomController', 'update'],
     'api/rooms/delete'           => ['RoomController', 'delete'],

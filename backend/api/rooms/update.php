@@ -35,14 +35,14 @@ if ($room['owner_id'] != $_SESSION['user_id']) {
     jsonResponse(["message" => "You can only update rooms in your own hotels"], 403);
 }
 
-$fields = ['room_type', 'price', 'capacity', 'description', 'is_available'];
+$fields = ['room_type', 'price', 'capacity', 'total_rooms', 'description', 'is_available'];
 $updates = [];
 $params = [];
 
 foreach ($fields as $field) {
     if (isset($input[$field])) {
         $updates[] = "$field = ?";
-        $params[] = $input[$field];
+        $params[] = $field === 'total_rooms' ? max(1, (int)$input[$field]) : $input[$field];
     }
 }
 

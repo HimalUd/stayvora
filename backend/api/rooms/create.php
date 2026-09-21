@@ -22,6 +22,7 @@ $hotelId = $input['hotel_id'] ?? null;
 $roomType = trim($input['room_type'] ?? '');
 $price = $input['price'] ?? null;
 $capacity = $input['capacity'] ?? 2;
+$totalRooms = isset($input['total_rooms']) ? max(1, (int)$input['total_rooms']) : 1;
 $description = trim($input['description'] ?? '');
 
 if (!$hotelId || !is_numeric($hotelId)) {
@@ -46,8 +47,8 @@ if ($hotel['owner_id'] != $_SESSION['user_id']) {
     jsonResponse(["message" => "You can only add rooms to your own hotels"], 403);
 }
 
-$stmt = $conn->prepare("INSERT INTO rooms (hotel_id, room_type, price, capacity, description) VALUES (?, ?, ?, ?, ?)");
-$stmt->execute([$hotelId, $roomType, $price, $capacity, $description]);
+$stmt = $conn->prepare("INSERT INTO rooms (hotel_id, room_type, price, capacity, total_rooms, description) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->execute([$hotelId, $roomType, $price, $capacity, $totalRooms, $description]);
 
 $roomId = $conn->lastInsertId();
 $stmt = $conn->prepare("SELECT * FROM rooms WHERE id = ?");

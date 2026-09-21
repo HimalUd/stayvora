@@ -63,6 +63,7 @@ const roomSchema = z.object({
   room_type: z.string().min(1, 'Room type is required'),
   price: z.string().min(1, 'Price is required'),
   capacity: z.string().min(1, 'Capacity is required'),
+  total_rooms: z.string().min(1, 'Number of rooms is required').refine(v => !isNaN(Number(v)) && Number(v) >= 1, 'Must be at least 1 room'),
   description: z.string().optional(),
 });
 
@@ -273,6 +274,7 @@ export default function HotelOwnerDashboard() {
       room_type: data.room_type,
       price: Number(data.price),
       capacity: Number(data.capacity),
+      total_rooms: Math.max(1, parseInt(data.total_rooms, 10) || 1),
       description: data.description || '',
     };
     if (editingRoom) {
@@ -290,6 +292,7 @@ export default function HotelOwnerDashboard() {
       room_type: room.room_type || '',
       price: room.price != null ? String(room.price) : '',
       capacity: room.capacity != null ? String(room.capacity) : '',
+      total_rooms: room.total_rooms != null ? String(room.total_rooms) : '1',
       description: room.description || '',
     });
   };
@@ -392,7 +395,7 @@ export default function HotelOwnerDashboard() {
               <div className="hod-booking-details">
                 <div className="hod-bd-item">
                   <span className="hod-bd-label">Room</span>
-                  <span className="hod-bd-value">{b.room_type}</span>
+                  <span className="hod-bd-value">{b.room_type} {b.num_rooms ? `(${b.num_rooms} room${b.num_rooms > 1 ? 's' : ''})` : ''}</span>
                 </div>
                 <div className="hod-bd-item">
                   <span className="hod-bd-label">Hotel</span>
@@ -601,8 +604,12 @@ export default function HotelOwnerDashboard() {
               {roomErrors.price && <span className="hod-error">{roomErrors.price.message}</span>}
             </div>
             <div className="hod-mgmt-row">
-              <input className="hod-input" type="number" placeholder="Max guests" {...regRoom('capacity')} />
+              <input className="hod-input" type="number" placeholder="Max guests per room" {...regRoom('capacity')} />
               {roomErrors.capacity && <span className="hod-error">{roomErrors.capacity.message}</span>}
+            </div>
+            <div className="hod-mgmt-row">
+              <input className="hod-input" type="number" min="1" placeholder="Number of available rooms (e.g. 5)" {...regRoom('total_rooms')} />
+              {roomErrors.total_rooms && <span className="hod-error">{roomErrors.total_rooms.message}</span>}
             </div>
             <div className="hod-mgmt-row">
               <input className="hod-input" placeholder="Room description (optional)" {...regRoom('description')} />
@@ -632,7 +639,7 @@ export default function HotelOwnerDashboard() {
           rooms.map(r => (
             <div key={r.id} className="hod-mgmt-item">
               <div className="hod-mgmt-item-info">
-                <strong>{r.room_type}</strong> — <span style={{ color: '#059669', fontWeight: 600 }}>{formatLKRFixed(r.price)}</span>/night &middot; {r.capacity} guests
+                <strong>{r.room_type}</strong> — <span style={{ color: '#059669', fontWeight: 600 }}>{formatLKRFixed(r.price)}</span>/night &middot; {r.capacity} guests/room &middot; <span style={{ fontWeight: 600, color: '#2563EB' }}>{r.total_rooms || 1} room{(r.total_rooms || 1) > 1 ? 's' : ''}</span>
                 {r.description && <p className="hod-mgmt-item-desc">{r.description}</p>}
               </div>
               <div className="hod-mgmt-actions">

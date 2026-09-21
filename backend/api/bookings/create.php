@@ -59,11 +59,40 @@ try {
         jsonResponse(["message" => "Hotel not found"], 404);
     }
 
-    $stmt = $conn->prepare("SELECT * FROM bookings WHERE room_id = ? AND status IN ('pending', 'confirmed')
-        AND (check_in < ? AND check_out > ?)");
+    $capacity = max(1, (int)($room['capacity'] ?? 2));
+    $roomsNeeded = (int)ceil($guests / $capacity);
+    $numRooms = isset($input['num_rooms']) && (int)$input['num_rooms'] > 0
+        ? max($roomsNeeded, (int)$input['num_rooms'])
+        : $roomsNeeded;
+
+    $totalRooms = max(1, (int)($room['total_rooms'] ?? 1));
+
+    $stmt = $conn->prepare("SELECT check_in, check_out, COALESCE(num_rooms, 1) AS num_rooms FROM bookings WHERE room_id = ? AND status IN ('pending', 'confirmed') AND (check_in < ? AND check_out > ?)");
     $stmt->execute([$roomId, $checkOut, $checkIn]);
-    if ($stmt->fetch()) {
-        jsonResponse(["message" => "Room is already booked for these dates"], 409);
+    $overlappingBookings = $stmt->fetchAll();
+
+    $start = new DateTime($checkIn);
+    $end = new DateTime($checkOut);
+    $maxBookedOnAnyNight = 0;
+    for ($current = clone $start; $current < $end; $current->modify('+1 day')) {
+        $dateStr = $current->format('Y-m-d');
+        $bookedTonight = 0;
+        foreach ($overlappingBookings as $b) {
+            if ($b['check_in'] <= $dateStr && $b['check_out'] > $dateStr) {
+                $bookedTonight += (int)$b['num_rooms'];
+            }
+        }
+        if ($bookedTonight > $maxBookedOnAnyNight) {
+            $maxBookedOnAnyNight = $bookedTonight;
+        }
+    }
+
+    $availableRooms = max(0, $totalRooms - $maxBookedOnAnyNight);
+    if ($numRooms > $availableRooms) {
+        $msg = $availableRooms <= 0
+            ? "This room is completely booked for the selected dates."
+            : "Only {$availableRooms} room(s) available for the selected dates, but {$numRooms} room(s) are required for {$guests} guest(s).";
+        jsonResponse(["message" => $msg], 409);
     }
 
     $checkInDate = new DateTime($checkIn);
@@ -71,13 +100,13 @@ try {
     $nights = $checkInDate->diff($checkOutDate)->days;
     if ($nights < 1) $nights = 1;
 
-    $totalPrice = $room['price'] * $nights;
+    $totalPrice = $room['price'] * $nights * $numRooms;
     $bookingCode = 'BKD' . strtoupper(substr(uniqid(), -7));
     $guestName = trim($firstName . ' ' . $lastName);
 
-    $stmt = $conn->prepare("INSERT INTO bookings (user_id, hotel_id, room_id, booking_code, check_in, check_out, guests, total_price, guest_name, guest_email, guest_phone, special_requests)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$_SESSION['user_id'], $hotelId, $roomId, $bookingCode, $checkIn, $checkOut, $guests, $totalPrice, $guestName, $email, $phone, $specialRequests]);
+    $stmt = $conn->prepare("INSERT INTO bookings (user_id, hotel_id, room_id, booking_code, check_in, check_out, guests, num_rooms, total_price, guest_name, guest_email, guest_phone, special_requests)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$_SESSION['user_id'], $hotelId, $roomId, $bookingCode, $checkIn, $checkOut, $guests, $numRooms, $totalPrice, $guestName, $email, $phone, $specialRequests]);
 
     $bookingId = $conn->lastInsertId();
 

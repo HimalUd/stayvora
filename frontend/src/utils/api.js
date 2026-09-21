@@ -37,6 +37,7 @@ export const hotelsAPI = {
 
 export const roomsAPI = {
   list: (hotelId) => api.get('/api/rooms/list', { params: { hotel_id: hotelId } }),
+  checkAvailability: (roomId, checkIn, checkOut) => api.get('/api/rooms/availability', { params: { room_id: roomId, check_in: checkIn, check_out: checkOut } }),
   create: (data) => api.post('/api/rooms/create', data),
   update: (data) => api.put('/api/rooms/update', data),
   delete: (id) => api.delete('/api/rooms/delete', { params: { id } }),
