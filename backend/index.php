@@ -23,7 +23,13 @@ if (basename($scriptName) === 'index.php') {
 $path = ltrim($path, '/');
 $path = rtrim($path, '/');
 
+if ($path === 'api/health' || $path === 'api/status') {
+    require_once __DIR__ . '/test_db.php';
+    exit;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
+
 
 $routes = [
     'api/auth/register'          => ['AuthController', 'register'],
