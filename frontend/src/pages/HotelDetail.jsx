@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useHotel } from '../hooks/useHotels';
 import { useRooms } from '../hooks/useRooms';
+import { useHotelReviews } from '../hooks/useReviews';
 import { formatLKRFixed } from '../utils/currency';
 import './HotelDetail.css';
 
@@ -15,6 +16,25 @@ function getRatingLabel(rating) {
   return 'Poor';
 }
 
+function Stars({ value, size = 14 }) {
+  const filled = Math.round(Number(value) || 0);
+  return (
+    <span className="hd-review-stars" aria-hidden="true">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <svg key={i} width={size} height={size} viewBox="0 0 20 20" fill={i <= filled ? '#F5A624' : '#D3D7DE'}>
+          <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function formatReviewDate(d) {
+  const date = new Date(d);
+  if (isNaN(date)) return d;
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 export default function HotelDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,6 +44,7 @@ export default function HotelDetail() {
 
   const { data: hotel, isLoading: loading, error } = useHotel(id);
   const { data: rooms = [] } = useRooms(id);
+  const { data: reviewData, isLoading: reviewsLoading } = useHotelReviews(id);
 
   const initMap = (retries = 0) => {
     const container = document.getElementById('hd-map-container');
@@ -160,6 +181,7 @@ export default function HotelDetail() {
       : [];
   const popularFacilities = amenitiesList.slice(0, 3).join(', ');
   const minPrice = rooms.length > 0 ? Math.min(...rooms.map(r => Number(r.price))) : 0;
+  const selectedRoomData = selectedRoom !== null ? rooms[selectedRoom] : null;
 
   return (
     <div className="hd-page">
@@ -376,6 +398,19 @@ export default function HotelDetail() {
             </div>
             <div className="hd-booking-body">
               <div className="hd-booking-row">
+                <div className="hd-booking-label">Room Type</div>
+                <div className="hd-booking-value">
+                  {selectedRoomData ? selectedRoomData.room_type : 'Select a room'}
+                </div>
+              </div>
+              {selectedRoomData && (
+                <div className="hd-booking-row">
+                  <div className="hd-booking-label">Sleeps</div>
+                  <div className="hd-booking-value">Up to {selectedRoomData.capacity || 1} guest{(selectedRoomData.capacity || 1) > 1 ? 's' : ''}</div>
+                </div>
+              )}
+              <div className="hd-booking-divider" />
+              <div className="hd-booking-row">
                 <div className="hd-booking-label">Check-in</div>
                 <div className="hd-booking-value">Select dates</div>
               </div>
@@ -391,15 +426,25 @@ export default function HotelDetail() {
               </div>
               <div className="hd-booking-divider" />
                 <div className="hd-booking-price-section">
-                  <div className="hd-booking-starting">Starting from</div>
-                  <div className="hd-booking-amount">{minPrice > 0 ? formatLKRFixed(minPrice) : '-'}</div>
+                  <div className="hd-booking-starting">{selectedRoomData ? 'Selected room price' : 'Starting from'}</div>
+                  <div className="hd-booking-amount">
+                    {selectedRoomData
+                      ? formatLKRFixed(selectedRoomData.price)
+                      : minPrice > 0 ? formatLKRFixed(minPrice) : '-'}
+                  </div>
                   <div className="hd-booking-unit">per night</div>
                 </div>
               <button
                 className="hd-booking-cta"
-                onClick={() => document.getElementById('hd-rooms-section')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  if (selectedRoomData) {
+                    navigate(`/booking/${id}?room=${selectedRoomData.id}`);
+                  } else {
+                    document.getElementById('hd-rooms-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
-                Choose Your Room
+                {selectedRoomData ? 'Book This Room' : 'Choose Your Room'}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -417,6 +462,50 @@ export default function HotelDetail() {
         </div>
 
       </div>
+
+      {/* ===== GUEST REVIEWS ===== */}
+      <section className="hd-reviews">
+        <div className="hd-card hd-reviews-card">
+          <div className="hd-section-head">
+            <span className="hd-eyebrow">What Our Guests Say</span>
+            <h2 className="hd-section-title">Guest Reviews</h2>
+          </div>
+
+          {reviewsLoading ? (
+            <div className="loading-screen"><div className="spinner" /></div>
+          ) : !reviewData || reviewData.reviews.length === 0 ? (
+            <p className="hd-reviews-empty">No reviews yet for this hotel. Be the first to review your stay!</p>
+          ) : (
+            <>
+              <div className="hd-reviews-summary">
+                <div className="hd-reviews-summary-value">
+                  {Number(reviewData.summary.average || 0).toFixed(1)}
+                </div>
+                <div className="hd-reviews-summary-meta">
+                  <Stars value={reviewData.summary.average} size={20} />
+                  <span>Based on {reviewData.summary.count} review{reviewData.summary.count !== 1 ? 's' : ''}</span>
+                </div>
+              </div>
+              <div className="hd-reviews-list">
+                {reviewData.reviews.map((r) => (
+                  <div key={r.id} className="hd-review-item">
+                    <div className="hd-review-head">
+                      <div className="hd-review-avatar">{r.user_name?.charAt(0).toUpperCase() || 'U'}</div>
+                      <div className="hd-review-meta">
+                        <span className="hd-review-name">{r.user_name}</span>
+                        <span className="hd-review-date">{formatReviewDate(r.created_at)}</span>
+                      </div>
+                      <Stars value={r.rating} size={16} />
+                    </div>
+                    {r.title && <p className="hd-review-title">{r.title}</p>}
+                    {r.comment && <p className="hd-review-comment">{r.comment}</p>}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

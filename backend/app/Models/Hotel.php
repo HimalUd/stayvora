@@ -26,14 +26,18 @@ class Hotel extends Model {
     }
 
     public function getHotelWithOwner(int $id): ?array {
-        $sql = "SELECT h.*, u.name as owner_name, u.email as owner_email
+        $sql = "SELECT h.*, u.name as owner_name, u.email as owner_email,
+                (SELECT COUNT(*) FROM reviews rev WHERE rev.hotel_id = h.id) AS total_reviews,
+                COALESCE(ROUND((SELECT AVG(rev.rating) FROM reviews rev WHERE rev.hotel_id = h.id), 1), h.rating, 0) AS rating
                 FROM hotels h JOIN users u ON h.owner_id = u.id WHERE h.id = ?";
         return $this->fetchOne($sql, [$id]);
     }
 
     public function getActiveHotelsWithMinPrice(?string $search = null): array {
         $sql = "SELECT h.*, u.name as owner_name,
-                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price
+                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price,
+                (SELECT COUNT(*) FROM reviews rev WHERE rev.hotel_id = h.id) AS total_reviews,
+                COALESCE(ROUND((SELECT AVG(rev.rating) FROM reviews rev WHERE rev.hotel_id = h.id), 1), h.rating, 0) AS rating
                 FROM hotels h
                 JOIN users u ON h.owner_id = u.id
                 WHERE h.status = 'active'";
@@ -62,7 +66,9 @@ class Hotel extends Model {
 
     public function searchHotels(array $filters): array {
         $sql = "SELECT DISTINCT h.*, u.name as owner_name,
-                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price
+                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price,
+                (SELECT COUNT(*) FROM reviews rev WHERE rev.hotel_id = h.id) AS total_reviews,
+                COALESCE(ROUND((SELECT AVG(rev.rating) FROM reviews rev WHERE rev.hotel_id = h.id), 1), h.rating, 0) AS rating
                 FROM hotels h
                 JOIN users u ON h.owner_id = u.id
                 LEFT JOIN rooms r ON r.hotel_id = h.id
@@ -178,7 +184,9 @@ class Hotel extends Model {
 
     public function getHotelsByOwner(int $ownerId): array {
         $sql = "SELECT h.*,
-                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price
+                (SELECT MIN(price) FROM rooms WHERE hotel_id = h.id AND is_available = 1) as min_room_price,
+                (SELECT COUNT(*) FROM reviews rev WHERE rev.hotel_id = h.id) AS total_reviews,
+                COALESCE(ROUND((SELECT AVG(rev.rating) FROM reviews rev WHERE rev.hotel_id = h.id), 1), h.rating, 0) AS rating
                 FROM hotels h
                 WHERE h.owner_id = ?
                 ORDER BY h.created_at DESC";

@@ -34,6 +34,7 @@ export function useSubmitReview() {
       if (bookingId) queryClient.invalidateQueries({ queryKey: ['reviews', 'booking', bookingId] });
       if (hotelId) queryClient.invalidateQueries({ queryKey: ['reviews', 'hotel', hotelId] });
       queryClient.invalidateQueries({ queryKey: ['hotels'] });
+      queryClient.invalidateQueries({ queryKey: ['hotel'] });
     },
   });
 }

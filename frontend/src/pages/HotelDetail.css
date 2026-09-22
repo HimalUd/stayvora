@@ -884,3 +884,133 @@
     height: 72px;
   }
 }
+
+/* ===== GUEST REVIEWS ===== */
+.hd-reviews {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.hd-reviews-card {
+  padding: 28px;
+}
+
+.hd-reviews-empty {
+  color: #6B7280;
+  font-size: 0.9rem;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.hd-reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 22px;
+  background: linear-gradient(135deg, rgba(245, 166, 36, 0.08), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(245, 166, 36, 0.25);
+  border-radius: 14px;
+  margin-top: 18px;
+}
+
+.hd-reviews-summary-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0A1B33;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.hd-reviews-summary-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hd-reviews-summary-meta span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+.hd-reviews-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hd-review-item {
+  padding: 18px 20px;
+  background: #F7F9FC;
+  border: 1px solid rgba(10, 27, 51, 0.06);
+  border-radius: 14px;
+}
+
+.hd-review-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hd-review-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #155DFC, #7C3AED);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.hd-review-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hd-review-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0A1B33;
+  line-height: 1.4;
+}
+
+.hd-review-date {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+.hd-review-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.hd-review-title {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1A2B49;
+  line-height: 1.5;
+}
+
+.hd-review-comment {
+  margin-top: 4px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: #4B5563;
+  line-height: 1.6;
+}
